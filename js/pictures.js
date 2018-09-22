@@ -55,13 +55,13 @@ for (var i = 0; i < PHOTOS_COUNT; i++) {
   photoCard.url = 'photos/' + (i + 1) + '.jpg';
   photoCard.likes = Math.ceil(Math.random() * (LIKES_MAX - LIKES_MIN) + LIKES_MIN);
 
-  // Генерация случайного массива комментариев под одним снимком
+  // Генерация случайного массива комментариев под одним фото
   var OnePhotoComments = [];
   var commentsCount = Math.ceil(Math.random() * COMMENTS_MAX);
   for (var j = 0; j < commentsCount; j++) {
     OnePhotoComments[j] = generateComment(commentsStrings);
   }
-  // после генерации записываем полученный массив в свойство объекта
+  // после генерации записываем полученный массив комментариев в объект
   photoCard.comments = OnePhotoComments;
   photoCard.description = descriptionStrings[Math.floor(Math.random() * descriptionStrings.length)];
 
