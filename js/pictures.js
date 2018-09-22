@@ -1,8 +1,4 @@
 var PHOTOS_COUNT = 25;
-var photosUrl = [];
-var photosLikes = [];
-var photosComments = [];
-var photosDescriptions = [];
 var LIKES_MIN = 15;
 var LIKES_MAX = 200;
 var COMMENTS_MAX = 10;
@@ -22,6 +18,7 @@ var descriptionStrings = [
   'Цените каждое мгновенье. Цените тех, кто рядом с вами и отгоняйте все сомненья. Не обижайте всех словами......',
   'Вот это тачка!'
 ];
+var photoObjects = [];
 
 // функция для генерации одного комментария
 var generateComment = function(strings) {
@@ -52,24 +49,25 @@ var generateComment = function(strings) {
 
 
 
-// запись отдельных массивов с данным для фотографий (пока так)
+// запись свойств объекта и добавление его в концец массива photoObjects
 for (var i = 0; i < PHOTOS_COUNT; i++) {
-  photosUrl[i] = 'photos/' + (i + 1) + '.jpg';
-  photosLikes[i] = Math.ceil(Math.random() * (LIKES_MAX - LIKES_MIN) + LIKES_MIN);
+  var photoCard = {};
+  photoCard.url = 'photos/' + (i + 1) + '.jpg';
+  photoCard.likes = Math.ceil(Math.random() * (LIKES_MAX - LIKES_MIN) + LIKES_MIN);
 
-  // Генерация массива комментариев под одним снимком
+  // Генерация случайного массива комментариев под одним снимком
   var OnePhotoComments = [];
   var commentsCount = Math.ceil(Math.random() * COMMENTS_MAX);
   for (var j = 0; j < commentsCount; j++) {
     OnePhotoComments[j] = generateComment(commentsStrings);
   }
-  // после генерации записываем полученный массив в текущий элемент массива списков комментариев
-  photosComments[i] = OnePhotoComments;
-  photosDescriptions[i] = descriptionStrings[Math.floor(Math.random() * descriptionStrings.length)];
+  // после генерации записываем полученный массив в свойство объекта
+  photoCard.comments = OnePhotoComments;
+  photoCard.description = descriptionStrings[Math.floor(Math.random() * descriptionStrings.length)];
+
+  photoObjects.push(photoCard);
 }
 
 //проверочка
-console.log(photosUrl);
-console.log(photosLikes);
-console.log(photosComments);
-console.log(photosDescriptions);
+console.log(photoObjects);
+
