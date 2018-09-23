@@ -2,6 +2,7 @@
 var PHOTOS_COUNT = 25;
 var LIKES_MIN = 15;
 var LIKES_MAX = 200;
+var COMMENTS_MIN = 10;
 var COMMENTS_MAX = 100;
 var AVATAR_VARIANTS = 6;
 var commentsStrings = [
@@ -22,41 +23,52 @@ var descriptionStrings = [
 ];
 var photoObjects = [];
 
-// функция для генерации одного комментария
+/*
+  Код должен быть разделён на отдельные функции.
+  Стоит отдельно объявить:
+  - функцию генерации случайных данных,
+  - функцию создания DOM-элемента на основе JS-объекта,
+  - функцию заполнения блока DOM-элементами на основе массива JS-объектов.
+  Пункты задания примерно соответствуют функциям, которые вы должны создать.
+*/
+
+// генерация случайного числа из диапазона
+var generateNumber = function (min, max) {
+  var number;
+  number = Math.ceil(Math.random() * (max - min) + min);
+  return number;
+};
+
+// генерация одного комментария из одной либо двух строк
 var generateComment = function (strings) {
   /*
-    Объявляем две переменные для генерации комментария из двух строк.
     Для переменной commentStringTwo выражение (commentsStrings.length * 2) позволяет
     с вероятностью 50% выбрать либо одну из строк в массиве, либо пустое значение - undefined.
     Таким образом, мы с 50% вероятностью сможем генерировать комментарии то с одним, то с двумя строками.
-    Я надеюсь, что в JS допустимо обращаться к несуществующим элементам массива и оперировать с undefined.
   */
   var stringOne = strings[Math.floor(Math.random() * strings.length)];
   var stringTwo = strings[Math.floor(Math.random() * strings.length * 2)];
-  var comment;
 
   /*
     Если вторая переманная возвращает undefined или если обе строки будут равны,
     выводим пустую строку во второй переменной, тогда комментарий будет состоять только из первой строки.
     Иначе - склеиваем комментарий из двух строк и пробела.
   */
-  if (stringTwo === undefined || stringOne === stringTwo) {
-    comment = stringOne;
-  } else {
-    comment = stringOne + ' ' + stringTwo;
-  }
+  var comment;
+  comment = (stringTwo === undefined || stringOne === stringTwo) ? stringOne : stringOne + ' ' + stringTwo;
   return comment;
 };
 
-// запись свойств объекта и добавление его в концец массива photoObjects
+
+// запись свойств объекта и добавление его в конец массива photoObjects
 for (var i = 0; i < PHOTOS_COUNT; i++) {
   var photoCard = {};
   photoCard.url = 'photos/' + (i + 1) + '.jpg';
-  photoCard.likes = Math.ceil(Math.random() * (LIKES_MAX - LIKES_MIN) + LIKES_MIN);
+  photoCard.likes = generateNumber(LIKES_MIN, LIKES_MAX);
 
   // Генерация случайного массива комментариев под одним фото
   var OnePhotoComments = [];
-  var commentsCount = Math.ceil(Math.random() * COMMENTS_MAX);
+  var commentsCount = generateNumber(COMMENTS_MIN, COMMENTS_MAX);
   for (var j = 0; j < commentsCount; j++) {
     OnePhotoComments[j] = generateComment(commentsStrings);
   }
@@ -67,11 +79,12 @@ for (var i = 0; i < PHOTOS_COUNT; i++) {
   photoObjects.push(photoCard);
 }
 
-// создаём DOM элементы фотографий пользователей с помощью шаблона и выводим их на страницу с помощью DocumentFragment
+// создаём DOM элементы фотографий пользователей с помощью шаблона
 var pictures = document.querySelector('.pictures');
 var pictureTemplate = document.querySelector('#picture').content.querySelector('a.picture');
 var pictureFragment = document.createDocumentFragment();
 
+// добавляем DOM элементы на страницу внутри общего фрагмента
 for (var i = 0; i < PHOTOS_COUNT; i++) {
   var picture = pictureTemplate.cloneNode(true);
   picture.querySelector('.picture__img').setAttribute('src', photoObjects[i].url);
@@ -81,9 +94,11 @@ for (var i = 0; i < PHOTOS_COUNT; i++) {
 }
 pictures.appendChild(pictureFragment);
 
-// выводим блок просмотра фотографии и наполняем его информацией
+// выводим блок просмотра фотографии
 var bigPicture = document.querySelector('.big-picture');
 bigPicture.classList.remove('hidden');
+
+// ...и наполняем его информацией
 bigPicture.querySelector('.big-picture__img img').setAttribute('src', photoObjects[0].url);
 bigPicture.querySelector('.big-picture__social .likes-count').textContent = photoObjects[0].likes;
 bigPicture.querySelector('.big-picture__social .comments-count').textContent = photoObjects[0].comments.length;
@@ -102,7 +117,7 @@ var commentsNumber = photoObjects[0].comments.length;
 
 for (var i = 0; i < commentsNumber; i++) {
   var newComment = commentTemplate.cloneNode(true);
-  var avatarUrl = 'img/avatar-' + Math.ceil(Math.random()* AVATAR_VARIANTS) + '.svg';
+  var avatarUrl = 'img/avatar-' + Math.ceil(Math.random() * AVATAR_VARIANTS) + '.svg';
   newComment.querySelector('.social__picture').setAttribute('src', avatarUrl);
   newComment.querySelector('.social__text').textContent = photoObjects[0].comments[i];
   commentsFragment.appendChild(newComment);
