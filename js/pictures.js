@@ -1,7 +1,9 @@
+'use strict';
 var PHOTOS_COUNT = 25;
 var LIKES_MIN = 15;
 var LIKES_MAX = 200;
-var COMMENTS_MAX = 10;
+var COMMENTS_MAX = 100;
+var AVATAR_VARIANTS = 6;
 var commentsStrings = [
   'Всё отлично!',
   'В целом всё неплохо. Но не всё.',
@@ -21,7 +23,7 @@ var descriptionStrings = [
 var photoObjects = [];
 
 // функция для генерации одного комментария
-var generateComment = function(strings) {
+var generateComment = function (strings) {
   /*
     Объявляем две переменные для генерации комментария из двух строк.
     Для переменной commentStringTwo выражение (commentsStrings.length * 2) позволяет
@@ -39,15 +41,12 @@ var generateComment = function(strings) {
     Иначе - склеиваем комментарий из двух строк и пробела.
   */
   if (stringTwo === undefined || stringOne === stringTwo) {
-      stringTwo = '';
-      comment = stringOne;
-    } else {
-      comment = stringOne + ' ' + stringTwo;
-    }
-    return comment;
+    comment = stringOne;
+  } else {
+    comment = stringOne + ' ' + stringTwo;
+  }
+  return comment;
 };
-
-
 
 // запись свойств объекта и добавление его в концец массива photoObjects
 for (var i = 0; i < PHOTOS_COUNT; i++) {
@@ -68,6 +67,49 @@ for (var i = 0; i < PHOTOS_COUNT; i++) {
   photoObjects.push(photoCard);
 }
 
-//проверочка
-console.log(photoObjects);
+// создаём DOM элементы фотографий пользователей с помощью шаблона и выводим их на страницу с помощью DocumentFragment
+var pictures = document.querySelector('.pictures');
+var pictureTemplate = document.querySelector('#picture').content.querySelector('a.picture');
+var pictureFragment = document.createDocumentFragment();
+
+for (var i = 0; i < PHOTOS_COUNT; i++) {
+  var picture = pictureTemplate.cloneNode(true);
+  picture.querySelector('.picture__img').setAttribute('src', photoObjects[i].url);
+  picture.querySelector('.picture__likes').textContent = photoObjects[i].likes;
+  picture.querySelector('.picture__comments').textContent = photoObjects[i].comments.length;
+  pictureFragment.appendChild(picture);
+}
+pictures.appendChild(pictureFragment);
+
+// выводим блок просмотра фотографии и наполняем его информацией
+var bigPicture = document.querySelector('.big-picture');
+bigPicture.classList.remove('hidden');
+bigPicture.querySelector('.big-picture__img img').setAttribute('src', photoObjects[0].url);
+bigPicture.querySelector('.big-picture__social .likes-count').textContent = photoObjects[0].likes;
+bigPicture.querySelector('.big-picture__social .comments-count').textContent = photoObjects[0].comments.length;
+bigPicture.querySelector('.big-picture__social .social__caption').textContent = photoObjects[0].description;
+
+// убираем стандартные комментарии из разметки
+var comments = document.querySelector('.social__comments');
+var commentTemplate = document.querySelector('.social__comment');
+var defaultComments = document.querySelectorAll('.social__comment');
+comments.removeChild(defaultComments[0]);
+comments.removeChild(defaultComments[1]);
+
+// добавляем комментарии, клонируя DOM-элемент .social__comment;
+var commentsFragment = document.createDocumentFragment();
+var commentsNumber = photoObjects[0].comments.length;
+
+for (var i = 0; i < commentsNumber; i++) {
+  var newComment = commentTemplate.cloneNode(true);
+  var avatarUrl = 'img/avatar-' + Math.ceil(Math.random()* AVATAR_VARIANTS) + '.svg';
+  newComment.querySelector('.social__picture').setAttribute('src', avatarUrl);
+  newComment.querySelector('.social__text').textContent = photoObjects[0].comments[i];
+  commentsFragment.appendChild(newComment);
+}
+comments.appendChild(commentsFragment);
+
+// прячем счётчик и загрузчик комментариев
+bigPicture.querySelector('.social__comment-count').classList.add('visually-hidden');
+bigPicture.querySelector('.comments-loader').classList.add('visually-hidden');
 
