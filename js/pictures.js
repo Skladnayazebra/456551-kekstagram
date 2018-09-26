@@ -156,13 +156,7 @@ bigPicture.querySelector('.comments-loader').classList.add('visually-hidden');
 
 // МОДУЛЬ 4 ЗАДАНИЕ 1 =========================================================
 
-// 1.3. Выбор изображения для загрузки осуществляется
-// с помощью стандартного контрола загрузки файла #upload-file,
-// который стилизован под букву «О» в логотипе. После выбора изображения
-// (изменения значения поля #upload-file), показывается форма редактирования изображения.
-
-// 1.4. Закрытие формы редактирования изображения производится
-// либо нажатием на кнопку .upload-cancel, либо нажатием клавиши Esc.
+// реализуем открытие/закрытие окна загрузки фотографии
 
 var ESC_KEYCODE = 27;
 var ENTER_KEYCODE = 13;
@@ -188,4 +182,21 @@ document.addEventListener('keydown', function (evt) {
   if (evt.keyCode === ESC_KEYCODE) {
     imgUploaderClose();
   }
+});
+
+// частично реализуем перемещение ползунка
+
+var effectLevelPin = document.querySelector('.effect-level__pin');
+var effectLevelDepth = document.querySelector('.effect-level__depth');
+var effectLevelWidth = document.querySelector('.effect-level__line').clientWidth;
+
+// effectLevelPin.addEventListener('mouseup', function (evt) {
+//   var pointerRelativePosition = Math.round(evt.clientX / effectLevelWidth * 100) + '%';
+//   effectLevelPin.style.left = pointerRelativePosition;
+//   effectLevelDepth.style.width = pointerRelativePosition;
+// });
+
+effectLevelPin.addEventListener('mouseup', function () {
+  effectLevelPin.style.left = '50%';
+  effectLevelDepth.style.width = '50%';
 });
