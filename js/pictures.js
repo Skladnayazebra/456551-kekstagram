@@ -1,5 +1,6 @@
 'use strict';
 
+// МОДУЛЬ 3 ЗАДАНИЕ 1 =========================================================
 var PHOTOS_COUNT = 25;
 var LIKES_MIN = 15;
 var LIKES_MAX = 200;
@@ -60,7 +61,8 @@ var generateComments = function () {
 
 // создание одного объекта
 var createObject = function (index) {
-  var photoObject = {
+  var photoObject;
+  photoObject = {
     url: 'photos/' + (index + 1) + '.jpg',
     likes: generateNumber(LIKES_MIN, LIKES_MAX),
     comments: generateComments(),
@@ -102,11 +104,14 @@ for (var i = 0; i < PHOTOS_COUNT; i++) {
 }
 pictures.appendChild(pictureFragment);
 
-// модификация блока просмотра фотографии
-
-// выводим блок
 var bigPicture = document.querySelector('.big-picture');
-bigPicture.classList.remove('hidden');
+
+// отображение превью
+var showBigPicture = function () {
+  bigPicture.classList.remove('hidden');
+};
+
+// модификация блока просмотра фотографии
 
 // наполнение блока сгенерированными данными
 var fillBigPicture = function (arrayElement) {
@@ -149,3 +154,38 @@ comments.appendChild(commentsFragment);
 bigPicture.querySelector('.social__comment-count').classList.add('visually-hidden');
 bigPicture.querySelector('.comments-loader').classList.add('visually-hidden');
 
+// МОДУЛЬ 4 ЗАДАНИЕ 1 =========================================================
+
+// 1.3. Выбор изображения для загрузки осуществляется
+// с помощью стандартного контрола загрузки файла #upload-file,
+// который стилизован под букву «О» в логотипе. После выбора изображения
+// (изменения значения поля #upload-file), показывается форма редактирования изображения.
+
+// 1.4. Закрытие формы редактирования изображения производится
+// либо нажатием на кнопку .upload-cancel, либо нажатием клавиши Esc.
+
+var ESC_KEYCODE = 27;
+var ENTER_KEYCODE = 13;
+var imgUploadField = document.querySelector('#upload-file');
+var imgUploadPopup = document.querySelector('.img-upload__overlay');
+var imgUploadPopupCloseBtn = document.querySelector('.img-upload__cancel');
+var imgUploaderOpen = function () {
+  imgUploadPopup.classList.remove('hidden');
+};
+var imgUploaderClose = function () {
+  imgUploadPopup.classList.add('hidden');
+  imgUploadField.value = null;
+};
+
+imgUploadField.addEventListener('change', imgUploaderOpen);
+imgUploadPopupCloseBtn.addEventListener('click', imgUploaderClose);
+imgUploadPopupCloseBtn.addEventListener('keydown', function (evt) {
+  if (evt.keyCode === ENTER_KEYCODE) {
+    imgUploaderClose();
+  }
+});
+document.addEventListener('keydown', function (evt) {
+  if (evt.keyCode === ESC_KEYCODE) {
+    imgUploaderClose();
+  }
+});
