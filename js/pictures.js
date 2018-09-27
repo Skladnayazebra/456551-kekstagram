@@ -215,7 +215,7 @@ CSS-стили элемента .img-upload__preview обновляются сл
   - уровень эффекта на фотографии изменяется
 */
 
-var imgUploadPreview = document.querySelector('.img-upload__preview');
+var imgUploadPreview = document.querySelector('.img-upload__preview img');
 var effectLevelLine = document.querySelector('.effect-level__line');
 var effectLevelField = document.querySelector('.img-upload__effect-level');
 var effectLevelPin = document.querySelector('.effect-level__pin');
@@ -247,6 +247,15 @@ var applyEffect = function (effectLevel) {
     case 'effect-sepia' :
       imgUploadPreview.style = 'filter: sepia(' + effectLevel / 100 + ')';
       break;
+    case 'effect-marvin' :
+      imgUploadPreview.style = 'filter: invert(' + effectLevel + '%)';
+      break;
+    case 'effect-phobos' :
+      imgUploadPreview.style = 'filter: blur(' + effectLevel / 100 * 3 + 'px)';
+      break;
+    case 'effect-heat' :
+      imgUploadPreview.style = 'filter: brightness(' + (1 + effectLevel / 100 * 2) + ')';
+      break;
   }
 };
 
@@ -261,6 +270,18 @@ effectChrome.addEventListener('click', function () {
 
 effectSepia.addEventListener('click', function () {
   toggleEffect('effects__preview--sepia');
+});
+
+effectMarvin.addEventListener('click', function () {
+  toggleEffect('effects__preview--marvin');
+});
+
+effectPhobos.addEventListener('click', function () {
+  toggleEffect('effects__preview--phobos');
+});
+
+effectHeat.addEventListener('click', function () {
+  toggleEffect('effects__preview--heat');
 });
 
 effectLevelLine.addEventListener('mouseup', function (evt) {
