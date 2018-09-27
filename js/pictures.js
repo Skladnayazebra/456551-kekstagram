@@ -229,6 +229,8 @@ var effectMarvin = document.querySelector('#effect-marvin');
 var effectPhobos = document.querySelector('#effect-phobos');
 var effectHeat = document.querySelector('#effect-heat');
 
+// var effectChecked = document.querySelector('.effects__radio:checked');
+
 var toggleEffect = function (effectClass) {
   imgUploadPreview.className = 'img-upload__preview';
   imgUploadPreview.classList.add(effectClass);
@@ -236,9 +238,28 @@ var toggleEffect = function (effectClass) {
   effectLevelPin.style.left = '100%';
   effectLevelDepth.style.width = '100%';
 };
+// проверка через классы
+// var applyEffect = function (effectLevel) {
+//   // сбрасываем ранее применённый инлайновый стиль
+//   imgUploadPreview.style = null;
+//   if (imgUploadPreview.className === 'img-upload__preview effects__preview--chrome') {
+//     imgUploadPreview.style = 'filter: grayscale(' + effectLevel / 100 + ')';
+//   } else if (imgUploadPreview.className === 'img-upload__preview effects__preview--sepia') {
+//     imgUploadPreview.style = 'filter: sepia(' + effectLevel / 100 + ')';
+//   }
+// };
 
+// проверка через checked
 var applyEffect = function (effectLevel) {
-  
+  imgUploadPreview.style = null;
+  switch (document.querySelector('.effects__radio:checked').id) {
+    case 'effect-chrome' :
+      imgUploadPreview.style = 'filter: grayscale(' + effectLevel / 100 + ')';
+      break;
+    case 'effect-sepia' :
+      imgUploadPreview.style = 'filter: sepia(' + effectLevel / 100 + ')';
+      break;
+  }
 };
 
 effectNone.addEventListener('click', function () {
@@ -250,11 +271,16 @@ effectChrome.addEventListener('click', function () {
   toggleEffect('effects__preview--chrome');
 });
 
+effectSepia.addEventListener('click', function () {
+  toggleEffect('effects__preview--sepia');
+});
+
 effectLevelLine.addEventListener('mouseup', function (evt) {
   var effectLevelWidth = document.querySelector('.effect-level__line').clientWidth;
   effectLevelPercent = Math.round(evt.offsetX / effectLevelWidth * 100);
   effectLevelPin.style.left = effectLevelPercent + '%';
   effectLevelDepth.style.width = effectLevelPercent + '%';
+  applyEffect(effectLevelPercent);
 });
 
 
