@@ -184,19 +184,77 @@ document.addEventListener('keydown', function (evt) {
   }
 });
 
-// частично реализуем перемещение ползунка
+// реализуем переключение фильтров
 
+/*
+Окей. У нас есть кнопки выбора эффектов. Это список, содержащий в себе элементы
+списка, внутри элементов лежат инпуты с разными id.
+При смене эффекта, выбором одного из значений среди радиокнопок .effects__radio,
+добавить картинке внутри .img-upload__preview CSS-класс, соответствующий эффекту.
+Например, если выбран эффект .effect-chrome, изображению нужно добавить класс effects__preview--chrome.
+Интенсивность эффекта регулируется перемещением ползунка в слайдере .effect-level__pin.
+Уровень эффекта записывается в поле .scale__value. При изменении уровня интенсивности эффекта,
+CSS-стили элемента .img-upload__preview обновляются следующим образом:
+
+Для эффекта «Хром» — filter: grayscale(0..1);
+Для эффекта «Сепия» — filter: sepia(0..1);
+Для эффекта «Марвин» — filter: invert(0..100%);
+Для эффекта «Фобос» — filter: blur(0..3px);
+Для эффекта «Зной» — filter: brightness(1..3).
+При выборе эффекта «Оригинал» слайдер скрывается.
+При переключении эффектов, уровень насыщенности сбрасывается до начального значения (100%):
+слайдер, CSS-стиль изображения и значение поля должны обновляться.
+
+1) нажимаем на кнопку нужного эффекта:
+  - с фотографии удаляется предыдущий эффект,
+  - к фотографии применяется текущий эффект на 100%,
+  - положение ползунка сбрасывается на 100%,
+    - если выбран эффект «оригинал», эффект не применяется, ползунок скрывается
+
+2) двигаем ползунок:
+  - уровень эффекта на фотографии изменяется
+*/
+
+var imgUploadPreview = document.querySelector('.img-upload__preview');
+var effectLevelLine = document.querySelector('.effect-level__line');
+var effectLevelField = document.querySelector('.img-upload__effect-level');
 var effectLevelPin = document.querySelector('.effect-level__pin');
 var effectLevelDepth = document.querySelector('.effect-level__depth');
-var effectLevelWidth = document.querySelector('.effect-level__line').clientWidth;
+var effectLevelPercent;
 
-// effectLevelPin.addEventListener('mouseup', function (evt) {
-//   var pointerRelativePosition = Math.round(evt.clientX / effectLevelWidth * 100) + '%';
-//   effectLevelPin.style.left = pointerRelativePosition;
-//   effectLevelDepth.style.width = pointerRelativePosition;
-// });
+var effectNone = document.querySelector('#effect-none');
+var effectChrome = document.querySelector('#effect-chrome');
+var effectSepia = document.querySelector('#effect-sepia');
+var effectMarvin = document.querySelector('#effect-marvin');
+var effectPhobos = document.querySelector('#effect-phobos');
+var effectHeat = document.querySelector('#effect-heat');
 
-effectLevelPin.addEventListener('mouseup', function () {
-  effectLevelPin.style.left = '50%';
-  effectLevelDepth.style.width = '50%';
+var toggleEffect = function (effectClass) {
+  imgUploadPreview.className = 'img-upload__preview';
+  imgUploadPreview.classList.add(effectClass);
+  effectLevelField.classList.remove('hidden');
+  effectLevelPin.style.left = '100%';
+  effectLevelDepth.style.width = '100%';
+};
+
+var applyEffect = function (effectLevel) {
+  
+};
+
+effectNone.addEventListener('click', function () {
+  toggleEffect('effects__preview--none');
+  effectLevelField.classList.add('hidden');
 });
+
+effectChrome.addEventListener('click', function () {
+  toggleEffect('effects__preview--chrome');
+});
+
+effectLevelLine.addEventListener('mouseup', function (evt) {
+  var effectLevelWidth = document.querySelector('.effect-level__line').clientWidth;
+  effectLevelPercent = Math.round(evt.offsetX / effectLevelWidth * 100);
+  effectLevelPin.style.left = effectLevelPercent + '%';
+  effectLevelDepth.style.width = effectLevelPercent + '%';
+});
+
+
