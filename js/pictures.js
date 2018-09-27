@@ -106,11 +106,6 @@ pictures.appendChild(pictureFragment);
 
 var bigPicture = document.querySelector('.big-picture');
 
-// отображение превью
-var showBigPicture = function () {
-  bigPicture.classList.remove('hidden');
-};
-
 // модификация блока просмотра фотографии
 
 // наполнение блока сгенерированными данными
@@ -156,19 +151,28 @@ bigPicture.querySelector('.comments-loader').classList.add('visually-hidden');
 
 // МОДУЛЬ 4 ЗАДАНИЕ 1 =========================================================
 
-// реализуем открытие/закрытие окна загрузки фотографии
+// реализуем открытие/закрытие окна загрузки фотографии и фото пользователя
 
 var ESC_KEYCODE = 27;
 var ENTER_KEYCODE = 13;
 var imgUploadField = document.querySelector('#upload-file');
 var imgUploadPopup = document.querySelector('.img-upload__overlay');
 var imgUploadPopupCloseBtn = document.querySelector('.img-upload__cancel');
+var bigPictureCloseBtn = document.querySelector('.big-picture__cancel');
 var imgUploaderOpen = function () {
   imgUploadPopup.classList.remove('hidden');
 };
 var imgUploaderClose = function () {
   imgUploadPopup.classList.add('hidden');
   imgUploadField.value = null;
+};
+
+var bigPictureOpen = function () {
+  bigPicture.classList.remove('hidden');
+};
+
+var bigPictureClose = function () {
+  bigPicture.classList.add('hidden');
 };
 
 imgUploadField.addEventListener('change', imgUploaderOpen);
@@ -178,44 +182,27 @@ imgUploadPopupCloseBtn.addEventListener('keydown', function (evt) {
     imgUploaderClose();
   }
 });
-document.addEventListener('keydown', function (evt) {
-  if (evt.keyCode === ESC_KEYCODE) {
-    imgUploaderClose();
+
+bigPictureCloseBtn.addEventListener('click', bigPictureClose);
+bigPictureCloseBtn.addEventListener('keydown', function (evt) {
+  if (evt.keyCode === ENTER_KEYCODE) {
+    bigPictureClose();
   }
 });
 
-// реализуем переключение фильтров
+document.querySelector('.picture').addEventListener('click', bigPictureOpen);
 
-/*
-Окей. У нас есть кнопки выбора эффектов. Это список, содержащий в себе элементы
-списка, внутри элементов лежат инпуты с разными id.
-При смене эффекта, выбором одного из значений среди радиокнопок .effects__radio,
-добавить картинке внутри .img-upload__preview CSS-класс, соответствующий эффекту.
-Например, если выбран эффект .effect-chrome, изображению нужно добавить класс effects__preview--chrome.
-Интенсивность эффекта регулируется перемещением ползунка в слайдере .effect-level__pin.
-Уровень эффекта записывается в поле .scale__value. При изменении уровня интенсивности эффекта,
-CSS-стили элемента .img-upload__preview обновляются следующим образом:
+document.addEventListener('keydown', function (evt) {
+  if (evt.keyCode === ESC_KEYCODE) {
+    imgUploaderClose();
+    bigPictureClose();
+  }
+});
 
-Для эффекта «Хром» — filter: grayscale(0..1);
-Для эффекта «Сепия» — filter: sepia(0..1);
-Для эффекта «Марвин» — filter: invert(0..100%);
-Для эффекта «Фобос» — filter: blur(0..3px);
-Для эффекта «Зной» — filter: brightness(1..3).
-При выборе эффекта «Оригинал» слайдер скрывается.
-При переключении эффектов, уровень насыщенности сбрасывается до начального значения (100%):
-слайдер, CSS-стиль изображения и значение поля должны обновляться.
 
-1) нажимаем на кнопку нужного эффекта:
-  - с фотографии удаляется предыдущий эффект,
-  - к фотографии применяется текущий эффект на 100%,
-  - положение ползунка сбрасывается на 100%,
-    - если выбран эффект «оригинал», эффект не применяется, ползунок скрывается
+// реализуем переключение и настройку фильтров
 
-2) двигаем ползунок:
-  - уровень эффекта на фотографии изменяется
-*/
-
-var imgUploadPreview = document.querySelector('.img-upload__preview img');
+var imgPreview = document.querySelector('.img-upload__preview img');
 var effectLevelLine = document.querySelector('.effect-level__line');
 var effectLevelField = document.querySelector('.img-upload__effect-level');
 var effectLevelPin = document.querySelector('.effect-level__pin');
@@ -230,9 +217,8 @@ var effectPhobos = document.querySelector('#effect-phobos');
 var effectHeat = document.querySelector('#effect-heat');
 
 var toggleEffect = function (effectClass) {
-  imgUploadPreview.style = '';
-  imgUploadPreview.className = 'img-upload__preview';
-  imgUploadPreview.classList.add(effectClass);
+  imgPreview.style = '';
+  imgPreview.className = effectClass;
   effectLevelField.classList.remove('hidden');
   effectLevelPin.style.left = '100%';
   effectLevelDepth.style.width = '100%';
@@ -242,19 +228,19 @@ var toggleEffect = function (effectClass) {
 var applyEffect = function (effectLevel) {
   switch (document.querySelector('.effects__radio:checked').id) {
     case 'effect-chrome' :
-      imgUploadPreview.style = 'filter: grayscale(' + effectLevel / 100 + ')';
+      imgPreview.style = 'filter: grayscale(' + effectLevel / 100 + ')';
       break;
     case 'effect-sepia' :
-      imgUploadPreview.style = 'filter: sepia(' + effectLevel / 100 + ')';
+      imgPreview.style = 'filter: sepia(' + effectLevel / 100 + ')';
       break;
     case 'effect-marvin' :
-      imgUploadPreview.style = 'filter: invert(' + effectLevel + '%)';
+      imgPreview.style = 'filter: invert(' + effectLevel + '%)';
       break;
     case 'effect-phobos' :
-      imgUploadPreview.style = 'filter: blur(' + effectLevel / 100 * 3 + 'px)';
+      imgPreview.style = 'filter: blur(' + effectLevel / 100 * 3 + 'px)';
       break;
     case 'effect-heat' :
-      imgUploadPreview.style = 'filter: brightness(' + (1 + effectLevel / 100 * 2) + ')';
+      imgPreview.style = 'filter: brightness(' + (1 + effectLevel / 100 * 2) + ')';
       break;
   }
 };
