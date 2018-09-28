@@ -1,6 +1,9 @@
 'use strict';
 
-// МОДУЛЬ 3 ЗАДАНИЕ 1 =========================================================
+
+var ESC_KEYCODE = 27;
+var ENTER_KEYCODE = 13;
+
 var PHOTOS_COUNT = 25;
 var LIKES_MIN = 15;
 var LIKES_MAX = 200;
@@ -23,10 +26,14 @@ var DESCRIPTION_STRINGS = [
   'Цените каждое мгновенье. Цените тех, кто рядом с вами и отгоняйте все сомненья. Не обижайте всех словами......',
   'Вот это тачка!'
 ];
+
+var EFFECT_LEVEL_DEFAULT = 100;
 var SCALE_MAX = 100;
 var SCALE_MIN = 25;
 var SCALE_STEP = 25;
 var SCALE_DEFAULT = 100;
+
+// МОДУЛЬ 3 ЗАДАНИЕ 1 =========================================================
 
 // генерация случайного числа из диапазона
 var generateNumber = function (min, max) {
@@ -37,17 +44,8 @@ var generateNumber = function (min, max) {
 
 // генерация одного комментария из одной либо двух строк из массива
 var generateComment = function (strings) {
-  /*
-    с вероятностью 50% во второй переменной возвращаем либо строку, либо undefined.
-  */
   var stringOne = strings[generateNumber(0, strings.length - 1)];
   var stringTwo = strings[generateNumber(0, (strings.length - 1) * 2)];
-
-  /*
-    Если вторая переманная возвращает undefined или если обе строки будут равны,
-    комментарий будет состоять только из первой строки.
-    Иначе - склеиваем комментарий из двух строк и пробела.
-  */
   var comment;
   comment = (stringTwo === undefined || stringOne === stringTwo) ? stringOne : stringOne + ' ' + stringTwo;
   return comment;
@@ -108,11 +106,9 @@ for (var i = 0; i < PHOTOS_COUNT; i++) {
 }
 pictures.appendChild(pictureFragment);
 
+// наполнение блока сгенерированными данными
 var bigPicture = document.querySelector('.big-picture');
 
-// модификация блока просмотра фотографии
-
-// наполнение блока сгенерированными данными
 var fillBigPicture = function (arrayElement) {
   bigPicture.querySelector('.big-picture__img img').setAttribute('src', arrayElement.url);
   bigPicture.querySelector('.big-picture__social .likes-count').textContent = arrayElement.likes;
@@ -130,7 +126,6 @@ var defaultComments = document.querySelectorAll('.social__comment');
 comments.removeChild(defaultComments[0]);
 comments.removeChild(defaultComments[1]);
 
-
 var commentsFragment = document.createDocumentFragment();
 var commentsNumber = photosData[0].comments.length;
 
@@ -143,7 +138,7 @@ var addComment = function (arrayElement) {
   return newComment;
 };
 
-  // наполнение фрагмента сгенерированными комментариями
+// наполнение фрагмента сгенерированными комментариями
 for (var j = 0; j < commentsNumber; j++) {
   commentsFragment.appendChild(addComment(photosData[0].comments[j]));
 }
@@ -157,15 +152,19 @@ bigPicture.querySelector('.comments-loader').classList.add('visually-hidden');
 
 // реализуем открытие/закрытие окна загрузки фотографии и фото пользователя
 
-var ESC_KEYCODE = 27;
-var ENTER_KEYCODE = 13;
+
 var imgUploadField = document.querySelector('#upload-file');
 var imgUploadPopup = document.querySelector('.img-upload__overlay');
 var imgUploadPopupCloseBtn = document.querySelector('.img-upload__cancel');
 var bigPictureCloseBtn = document.querySelector('.big-picture__cancel');
+
 var imgUploaderOpen = function () {
   imgUploadPopup.classList.remove('hidden');
+  applyEffect(EFFECT_LEVEL_DEFAULT);
+  // функция applyEffect находится ниже в коде, в разделе с фильтрами
 };
+
+
 var imgUploaderClose = function () {
   imgUploadPopup.classList.add('hidden');
   imgUploadField.value = null;
@@ -203,7 +202,6 @@ document.addEventListener('keydown', function (evt) {
   }
 });
 
-
 // реализуем переключение и настройку фильтров
 
 var imgPreview = document.querySelector('.img-upload__preview img');
@@ -224,13 +222,16 @@ var toggleEffect = function (effectClass) {
   imgPreview.style.filter = '';
   imgPreview.className = effectClass;
   effectLevelField.classList.remove('hidden');
-  effectLevelPin.style.left = '100%';
-  effectLevelDepth.style.width = '100%';
+  effectLevelPin.style.left = EFFECT_LEVEL_DEFAULT + '%';
+  effectLevelDepth.style.width = EFFECT_LEVEL_DEFAULT + '%';
 };
 
-// проверка через checked
 var applyEffect = function (effectLevel) {
   switch (document.querySelector('.effects__radio:checked').id) {
+    case 'effect-none' :
+      imgPreview.style.filter = '';
+      effectLevelField.classList.add('hidden');
+      break;
     case 'effect-chrome' :
       imgPreview.style.filter = 'grayscale(' + effectLevel / 100 + ')';
       break;
@@ -287,7 +288,6 @@ effectLevelLine.addEventListener('mouseup', function (evt) {
 var scaleControlSmaller = document.querySelector('.scale__control--smaller');
 var scaleControlBigger = document.querySelector('.scale__control--bigger');
 var scaleControlField = document.querySelector('.scale__control--value');
-
 var currentScale = SCALE_DEFAULT;
 
 var decreaseSize = function () {
@@ -308,3 +308,6 @@ var increaseSize = function () {
 
 scaleControlSmaller.addEventListener('click', decreaseSize);
 scaleControlBigger.addEventListener('click', increaseSize);
+
+// реализуем вывод изображения в полноэкранный режим по клику
+
