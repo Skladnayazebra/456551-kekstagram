@@ -7,8 +7,8 @@ var ENTER_KEYCODE = 13;
 var PHOTOS_COUNT = 25;
 var LIKES_MIN = 15;
 var LIKES_MAX = 200;
-var COMMENTS_MIN = 10;
-var COMMENTS_MAX = 100;
+var COMMENTS_MIN = 5;
+var COMMENTS_MAX = 15;
 var AVATAR_VARIANTS = 6;
 var COMMENTS_STRINGS = [
   'Всё отлично!',
@@ -286,14 +286,16 @@ var addComment = function (arrayElement) {
   return newComment;
 };
 
-var fillBigPicture = function (arrayElement) {
+var refreshBigPicture = function (arrayElement) {
+  // удаляем старые комментарии
+  bigPicture.querySelector('.social__comments').innerHTML = '';
   bigPicture.querySelector('.big-picture__img img').setAttribute('src', arrayElement.url);
   bigPicture.querySelector('.big-picture__social .likes-count').textContent = arrayElement.likes;
   bigPicture.querySelector('.big-picture__social .comments-count').textContent = String(arrayElement.comments.length);
   bigPicture.querySelector('.big-picture__social .social__caption').textContent = arrayElement.description;
   var commentsNumber = arrayElement.comments.length;
-  for (var i = 0; i < commentsNumber; i++) {
-    commentsFragment.appendChild(addComment(arrayElement.comments[i]));
+  for (var j = 0; j < commentsNumber; j++) {
+    commentsFragment.appendChild(addComment(arrayElement.comments[j]));
   }
   bigPicture.querySelector('.social__comments').appendChild(commentsFragment);
   bigPicture.querySelector('.social__comment-count').classList.add('visually-hidden');
@@ -308,7 +310,7 @@ picturesContainer.addEventListener('click', function (evt) {
   if (evt.target.closest('.picture')) {
     for (i = 1; i <= PHOTOS_COUNT; i++) {
       if (evt.target.closest('.picture').id === String(i)) {
-        fillBigPicture(photosData[i - 1]);
+        refreshBigPicture(photosData[i - 1]);
       }
     }
     bigPictureOpen();
