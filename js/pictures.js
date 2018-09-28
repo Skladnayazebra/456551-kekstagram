@@ -103,53 +103,11 @@ var createPictureElement = function (pictureData) {
   return picture;
 };
 
-// наполнение фрагмента элементоами picture
+// наполнение фрагмента элементоами picture и вывод на страницу
 for (var i = 0; i < PHOTOS_COUNT; i++) {
   pictureFragment.appendChild(createPictureElement(photosData[i]));
 }
 pictures.appendChild(pictureFragment);
-
-// наполнение блока сгенерированными данными
-var bigPicture = document.querySelector('.big-picture');
-
-var fillBigPicture = function (arrayElement) {
-  bigPicture.querySelector('.big-picture__img img').setAttribute('src', arrayElement.url);
-  bigPicture.querySelector('.big-picture__social .likes-count').textContent = arrayElement.likes;
-  bigPicture.querySelector('.big-picture__social .comments-count').textContent = String(arrayElement.comments.length);
-  bigPicture.querySelector('.big-picture__social .social__caption').textContent = arrayElement.description;
-  return bigPicture;
-};
-fillBigPicture(photosData[0]);
-
-var comments = document.querySelector('.social__comments');
-var commentTemplate = document.querySelector('.social__comment');
-
-// убираем стандартные комментарии
-var defaultComments = document.querySelectorAll('.social__comment');
-comments.removeChild(defaultComments[0]);
-comments.removeChild(defaultComments[1]);
-
-var commentsFragment = document.createDocumentFragment();
-var commentsNumber = photosData[0].comments.length;
-
-// добавление одного комментария в блок просмотра фотографии
-var addComment = function (arrayElement) {
-  var newComment = commentTemplate.cloneNode(true);
-  var avatarUrl = 'img/avatar-' + generateNumber(1, AVATAR_VARIANTS) + '.svg';
-  newComment.querySelector('.social__picture').setAttribute('src', avatarUrl);
-  newComment.querySelector('.social__text').textContent = arrayElement;
-  return newComment;
-};
-
-// наполнение фрагмента сгенерированными комментариями
-for (var j = 0; j < commentsNumber; j++) {
-  commentsFragment.appendChild(addComment(photosData[0].comments[j]));
-}
-comments.appendChild(commentsFragment);
-
-// прячем счётчик и загрузчик комментариев
-bigPicture.querySelector('.social__comment-count').classList.add('visually-hidden');
-bigPicture.querySelector('.comments-loader').classList.add('visually-hidden');
 
 // МОДУЛЬ 4 ЗАДАНИЕ 1 =========================================================
 
@@ -314,3 +272,52 @@ scaleControlBigger.addEventListener('click', increaseSize);
 
 // реализуем вывод изображения в полноэкранный режим по клику
 
+// наполнение блока bigPicture сгенерированными данными
+var bigPicture = document.querySelector('.big-picture');
+
+var fillBigPicture = function (arrayElement) {
+  bigPicture.querySelector('.big-picture__img img').setAttribute('src', arrayElement.url);
+  bigPicture.querySelector('.big-picture__social .likes-count').textContent = arrayElement.likes;
+  bigPicture.querySelector('.big-picture__social .comments-count').textContent = String(arrayElement.comments.length);
+  bigPicture.querySelector('.big-picture__social .social__caption').textContent = arrayElement.description;
+  return bigPicture;
+};
+
+fillBigPicture(photosData[0]);
+
+var comments = bigPicture.querySelector('.social__comments');
+var commentTemplate = document.querySelector('#social-comment').content.querySelector('li.social__comment');
+var commentsFragment = document.createDocumentFragment();
+var commentsNumber = photosData[0].comments.length;
+
+// добавление одного комментария в блок просмотра фотографии
+var addComment = function (arrayElement) {
+  var newComment = commentTemplate.cloneNode(true);
+  var avatarUrl = 'img/avatar-' + generateNumber(1, AVATAR_VARIANTS) + '.svg';
+  newComment.querySelector('.social__picture').setAttribute('src', avatarUrl);
+  newComment.querySelector('.social__text').textContent = arrayElement;
+  return newComment;
+};
+
+// наполнение фрагмента сгенерированными комментариями
+for (var j = 0; j < commentsNumber; j++) {
+  commentsFragment.appendChild(addComment(photosData[0].comments[j]));
+}
+comments.appendChild(commentsFragment);
+
+// прячем счётчик и загрузчик комментариев
+bigPicture.querySelector('.social__comment-count').classList.add('visually-hidden');
+bigPicture.querySelector('.comments-loader').classList.add('visually-hidden');
+
+var picturesContainer = document.querySelector('.pictures');
+
+picturesContainer.addEventListener('click', function (evt) {
+  if (evt.target.closest('.picture')) {
+    for (i = 1; i <= PHOTOS_COUNT; i++) {
+      if (evt.target.closest('.picture').id === String(i)) {
+
+      }
+    }
+    // bigPictureOpen();
+  }
+});
