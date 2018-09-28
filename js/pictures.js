@@ -23,6 +23,10 @@ var DESCRIPTION_STRINGS = [
   'Цените каждое мгновенье. Цените тех, кто рядом с вами и отгоняйте все сомненья. Не обижайте всех словами......',
   'Вот это тачка!'
 ];
+var SCALE_MAX = 100;
+var SCALE_MIN = 25;
+var SCALE_STEP = 25;
+var SCALE_DEFAULT = 100;
 
 // генерация случайного числа из диапазона
 var generateNumber = function (min, max) {
@@ -217,7 +221,7 @@ var effectPhobos = document.querySelector('#effect-phobos');
 var effectHeat = document.querySelector('#effect-heat');
 
 var toggleEffect = function (effectClass) {
-  imgPreview.style = '';
+  imgPreview.style.filter = '';
   imgPreview.className = effectClass;
   effectLevelField.classList.remove('hidden');
   effectLevelPin.style.left = '100%';
@@ -228,19 +232,19 @@ var toggleEffect = function (effectClass) {
 var applyEffect = function (effectLevel) {
   switch (document.querySelector('.effects__radio:checked').id) {
     case 'effect-chrome' :
-      imgPreview.style = 'filter: grayscale(' + effectLevel / 100 + ')';
+      imgPreview.style.filter = 'grayscale(' + effectLevel / 100 + ')';
       break;
     case 'effect-sepia' :
-      imgPreview.style = 'filter: sepia(' + effectLevel / 100 + ')';
+      imgPreview.style.filter = 'sepia(' + effectLevel / 100 + ')';
       break;
     case 'effect-marvin' :
-      imgPreview.style = 'filter: invert(' + effectLevel + '%)';
+      imgPreview.style.filter = 'invert(' + effectLevel + '%)';
       break;
     case 'effect-phobos' :
-      imgPreview.style = 'filter: blur(' + effectLevel / 100 * 3 + 'px)';
+      imgPreview.style.filter = 'blur(' + effectLevel / 100 * 3 + 'px)';
       break;
     case 'effect-heat' :
-      imgPreview.style = 'filter: brightness(' + (1 + effectLevel / 100 * 2) + ')';
+      imgPreview.style.filter = 'brightness(' + (1 + effectLevel / 100 * 2) + ')';
       break;
   }
 };
@@ -279,26 +283,17 @@ effectLevelLine.addEventListener('mouseup', function (evt) {
 });
 
 // реализуем масштабирование изоражения
-/*
-Масштаб по умолчанию
-
-*/
-
-
 
 var scaleControlSmaller = document.querySelector('.scale__control--smaller');
 var scaleControlBigger = document.querySelector('.scale__control--bigger');
 var scaleControlField = document.querySelector('.scale__control--value');
-var SCALE_MAX = 100;
-var SCALE_MIN = 25;
-var SCALE_STEP = 25;
-var SCALE_DEFAULT = 100;
+
 var currentScale = SCALE_DEFAULT;
 
 var decreaseSize = function () {
   if (currentScale > SCALE_MIN) {
     scaleControlField.value = (currentScale - SCALE_STEP) + '%';
-    imgPreview.style = 'transform: scale(' + (currentScale - SCALE_STEP) / 100 + ')';
+    imgPreview.style.transform = 'scale(' + (currentScale - SCALE_STEP) / 100 + ')';
     currentScale -= SCALE_STEP;
   }
 };
@@ -306,7 +301,7 @@ var decreaseSize = function () {
 var increaseSize = function () {
   if (currentScale < SCALE_MAX) {
     scaleControlField.value = (currentScale + SCALE_STEP) + '%';
-    imgPreview.style = 'transform: scale(' + (currentScale + SCALE_STEP) / 100 + ')';
+    imgPreview.style.transform = 'scale(' + (currentScale + SCALE_STEP) / 100 + ')';
     currentScale += SCALE_STEP;
   }
 };
