@@ -65,10 +65,11 @@ var generateComments = function () {
 var createObject = function (index) {
   var photoObject;
   photoObject = {
-    url: 'photos/' + (index + 1) + '.jpg',
+    url: 'photos/' + index + '.jpg',
     likes: generateNumber(LIKES_MIN, LIKES_MAX),
     comments: generateComments(),
-    description: DESCRIPTION_STRINGS[Math.floor(Math.random() * DESCRIPTION_STRINGS.length)]
+    description: DESCRIPTION_STRINGS[Math.floor(Math.random() * DESCRIPTION_STRINGS.length)],
+    id: index
   };
   return photoObject;
 };
@@ -78,7 +79,7 @@ var photosData = [];
 
 // генерация данных для фотокарточек
 var generatePhotosData = function (counter) {
-  for (var i = 0; i < counter; i++) {
+  for (var i = 1; i <= counter; i++) {
     photosData.push(createObject(i));
   }
   return photosData;
@@ -97,6 +98,8 @@ var createPictureElement = function (pictureData) {
   picture.querySelector('.picture__img').setAttribute('src', pictureData.url);
   picture.querySelector('.picture__likes').textContent = pictureData.likes;
   picture.querySelector('.picture__comments').textContent = String(pictureData.comments.length);
+  picture.id = pictureData.id;
+  // здесь, возможно, стоит прописывать id не просто как число, а добавлять 'picture-'
   return picture;
 };
 
