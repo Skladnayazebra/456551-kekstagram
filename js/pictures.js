@@ -164,6 +164,7 @@ document.addEventListener('keydown', function (evt) {
 });
 
 // реализуем переключение и настройку фильтров
+
 // работает корректно, но на этапе доработки проекта нужно:
 // 1) сделать единую функцию для применения эффекта,
 // 2) вместо отдельных обработчков использовать общий с делегированием.
@@ -288,7 +289,7 @@ scaleControlBigger.addEventListener('click', increaseSize);
 
 // реализуем вывод изображения в полноэкранный режим по клику
 
-// наполнение блока bigPicture сгенерированными данными
+
 var bigPicture = document.querySelector('.big-picture');
 var commentTemplate = document.querySelector('#social-comment').content.querySelector('li.social__comment');
 var commentsFragment = document.createDocumentFragment();
@@ -302,8 +303,8 @@ var addComment = function (arrayElement) {
   return newComment;
 };
 
+// наполнение блока bigPicture данными
 var renderBigPicture = function (arrayElement) {
-  // удаляем старые комментарии
   bigPicture.querySelector('.social__comments').innerHTML = '';
   bigPicture.querySelector('.big-picture__img img').setAttribute('src', arrayElement.url);
   bigPicture.querySelector('.big-picture__social .likes-count').textContent = arrayElement.likes;
@@ -319,13 +320,12 @@ var renderBigPicture = function (arrayElement) {
   return bigPicture;
 };
 
-
 var picturesContainer = document.querySelector('.pictures');
 
 picturesContainer.addEventListener('click', function (evt) {
   if (evt.target.closest('.picture')) {
     for (i = 1; i <= PHOTOS_COUNT; i++) {
-      if (evt.target.closest('.picture').id === String(i)) {
+      if (+evt.target.closest('.picture').id === i) {
         renderBigPicture(photosData[i - 1]);
       }
     }
