@@ -332,3 +332,27 @@ picturesContainer.addEventListener('click', function (evt) {
     bigPictureOpen();
   }
 });
+
+// МОДУЛЬ 4 ЗАДАНИЕ 2 =========================================================
+
+// Проверяем валидность формы с хэштегами
+
+var inputHashtags = document.querySelector('.text__hashtags');
+var submitButton = document.querySelector('.img-upload__submit');
+var hashtagsCheck = /^(#[A-Za-zА-Яа-яЁё]{1,19}\s(?!\s*$)){0,4}(#[A-Za-zА-Яа-яЁё]{1,19})?$/;
+
+submitButton.addEventListener('click', function () {
+  if (!hashtagsCheck.test(inputHashtags.value)) {
+    // отменить валидацию формы. Некорректные хэштеги
+  }
+  var hashtags = inputHashtags.value.toLowerCase().split(' ');
+  for (var i = 0; i < hashtags.length - 1; i++) {
+    var comparableHashtag = hashtags[i];
+
+    for (var j = i + 1; j < hashtags.length; j++) {
+      if (hashtags[j] === comparableHashtag) {
+        // отменить валидацию формы. Хэштеги повторяются
+      }
+    }
+  }
+});
