@@ -46,7 +46,7 @@
                   <!-- Изменение размера изображения -->
                   <fieldset class="img-upload__scale  scale">
                     <button type="button" class="scale__control  scale__control--smaller">Уменьшить</button>
-                    <input type="text" class="scale__control  scale__control--value" value="55%" title="Image Scale" name="scale" readonly>
+                    <input type="text" class="scale__control  scale__control--value" value="100%" title="Image Scale" name="scale" readonly>
                     <button type="button" class="scale__control  scale__control--bigger">Увеличить</button>
                   </fieldset>
 
@@ -72,7 +72,7 @@
                 <fieldset class="img-upload__effects  effects">
                   <ul class="effects__list">
                     <li class="effects__item">
-                      <input type="radio" class="effects__radio  visually-hidden" name="effect" id="effect-none" value="none">
+                      <input type="radio" class="effects__radio  visually-hidden" name="effect" id="effect-none" value="none" checked>
                       <label for="effect-none" class="effects__label">
                         <span class="effects__preview  effects__preview--none">Превью фото без эффекта</span>
                         Оригинал
@@ -107,7 +107,7 @@
                       </label>
                     </li>
                     <li class="effects__item">
-                      <input type="radio" class="effects__radio  visually-hidden" name="effect" id="effect-heat" value="heat" checked>
+                      <input type="radio" class="effects__radio  visually-hidden" name="effect" id="effect-heat" value="heat">
                       <label for="effect-heat" class="effects__label">
                         <span class="effects__preview  effects__preview--heat">Превью эффекта Зной</span>
                         Зной
@@ -154,15 +154,8 @@
 
           <!-- Комментарии к изображению -->
           <div class="social__comment-count">5 из <span class="comments-count">125</span> комментариев</div>
+          <!-- Сюда выгружаются комментарии, сгенерированные из шаблона -->
           <ul class="social__comments">
-            <li class="social__comment">
-              <img class="social__picture" src="img/avatar-4.svg" alt="Аватар комментатора фотографии" width="35" height="35">
-              <p class="social__text">Мега фото! Просто обалдеть. Как вам так удалось?</p>
-            </li>
-            <li class="social__comment">
-              <img class="social__picture" src="img/avatar-3.svg" alt="Аватар комментатора фотографии" width="35" height="35">
-               <p class="social__text">Да это фоташоп!!!!!!!!</p>
-            </li>
           </ul>
 
           <!-- Кнопка для загрузки новой порции комментариев -->
@@ -197,6 +190,8 @@
     </div>
   </footer>
 
+
+
   <!-- Шаблон изображения случайного пользователя -->
   <template id="picture">
     <a href="#" class="picture">
@@ -206,6 +201,14 @@
         <span class="picture__likes"></span>
       </p>
     </a>
+  </template>
+
+  <!-- Шаблон для комментария -->
+  <template id="social-comment">
+    <li class="social__comment">
+      <img class="social__picture" src="" alt="Аватар комментатора фотографии" width="35" height="35">
+      <p class="social__text"></p>
+    </li>
   </template>
 
   <!-- Сообщение с ошибкой загрузки изображения -->
@@ -235,6 +238,6 @@
   <template id="messages">
     <div class="img-upload__message  img-upload__message--loading">Загружаем...</div>
   </template>
-
+  <script src="js/pictures.js"></script>
 </body>
 </html>
