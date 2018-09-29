@@ -341,6 +341,8 @@ var inputHashtags = document.querySelector('.text__hashtags');
 var inputDescription = document.querySelector('.text__description');
 var submitButton = document.querySelector('.img-upload__submit');
 var hashtagsCheck = /^(#[0-9A-Za-zА-Яа-яЁё]{1,19}\s(?!\s*$)){0,4}(#[0-9A-Za-zА-Яа-яЁё]{1,19})?$/;
+// На этапе шлифовки проекта можно попробовать разбить эту проверку на несколько разных,
+// и для каждой выдавать своё сообщение. Но скорее всего это не критично
 var errorHighlight = function (field) {
   field.style.border = '1px solid ##ff4f4f';
   // почему-то не работает, позже гляну в чём дело
