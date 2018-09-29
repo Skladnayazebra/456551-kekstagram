@@ -341,6 +341,10 @@ var inputHashtags = document.querySelector('.text__hashtags');
 var inputDescription = document.querySelector('.text__description');
 var submitButton = document.querySelector('.img-upload__submit');
 var hashtagsCheck = /^(#[0-9A-Za-zА-Яа-яЁё]{1,19}\s(?!\s*$)){0,4}(#[0-9A-Za-zА-Яа-яЁё]{1,19})?$/;
+var errorHighlight = function (field) {
+  field.style.border = '1px solid ##ff4f4f';
+  // почему-то не работает, позже гляну в чём дело
+};
 
 submitButton.addEventListener('click', function () {
   if (!hashtagsCheck.test(inputHashtags.value)) {
@@ -348,6 +352,7 @@ submitButton.addEventListener('click', function () {
       'А в каждом хэштеге должно быть от 1 до 19 букв. ' +
       'И между хэштегами нужно ставить пробелы, а в конце - нет. ' +
       'Вот как всё строго ¯\\_(ツ)_/¯');
+    errorHighlight(inputHashtags);
   }
   var hashtags = inputHashtags.value.toLowerCase().split(' ');
   for (var i = 0; i < hashtags.length - 1; i++) {
@@ -356,10 +361,12 @@ submitButton.addEventListener('click', function () {
     for (var j = i + 1; j < hashtags.length; j++) {
       if (hashtags[j] === comparableHashtag) {
         inputHashtags.setCustomValidity('Будь оригинальнее! Зачем тебе столько одинаковых хэштегов?');
+        errorHighlight(inputHashtags);
       }
     }
   }
   if (inputDescription.value.length > 140) {
     inputDescription.setCustomValidity('Будь краток. В описании может быть не больше 140 знаков');
+    errorHighlight(inputDescription);
   }
 });
