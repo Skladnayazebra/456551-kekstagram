@@ -215,6 +215,7 @@ var applyEffect = function (effectLevel) {
 };
 /*
 можно попробовать вот такую модификацию:
+
 var styles = {
  'effect-none': '',
  'effect-chrome': 'grayscale(' + effectLevel / 100 + ')',
