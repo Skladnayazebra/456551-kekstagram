@@ -98,7 +98,7 @@ var createPictureElement = function (pictureData) {
   picture.querySelector('.picture__img').setAttribute('src', pictureData.url);
   picture.querySelector('.picture__likes').textContent = pictureData.likes;
   picture.querySelector('.picture__comments').textContent = String(pictureData.comments.length);
-  picture.id = pictureData.id;
+  picture.setAttribute('data-id', pictureData.id);
   // здесь, возможно, стоит прописывать id не просто как число, а добавлять 'picture-'
   return picture;
 };
@@ -164,6 +164,9 @@ document.addEventListener('keydown', function (evt) {
 });
 
 // реализуем переключение и настройку фильтров
+// работает корректно, но на этапе доработки проекта нужно:
+// 1) сделать единую функцию для применения эффекта,
+// 2) вместо отдельных обработчков использовать общий с делегированием.
 
 var imgPreview = document.querySelector('.img-upload__preview img');
 var effectLevelLine = document.querySelector('.effect-level__line');
@@ -179,7 +182,7 @@ var effectMarvin = document.querySelector('#effect-marvin');
 var effectPhobos = document.querySelector('#effect-phobos');
 var effectHeat = document.querySelector('#effect-heat');
 
-var toggleEffect = function (effectClass) {
+var switchEffect = function (effectClass) {
   imgPreview.style.filter = '';
   imgPreview.className = effectClass;
   effectLevelField.classList.remove('hidden');
@@ -210,30 +213,42 @@ var applyEffect = function (effectLevel) {
       break;
   }
 };
+/*
+можно попробовать вот такую модификацию:
+var styles = {
+ 'effect-none': '',
+ 'effect-chrome': 'grayscale(' + effectLevel / 100 + ')',
+ 'effect-sepia': 'sepia(' + effectLevel / 100 + ')',
+ ...
+}
+
+var effectName = document.querySelector('.effects__radio:checked').id;
+imgPreview.style.filter = styles[effectName];
+*/
 
 effectNone.addEventListener('click', function () {
-  toggleEffect('effects__preview--none');
+  switchEffect('effects__preview--none');
   effectLevelField.classList.add('hidden');
 });
 
 effectChrome.addEventListener('click', function () {
-  toggleEffect('effects__preview--chrome');
+  switchEffect('effects__preview--chrome');
 });
 
 effectSepia.addEventListener('click', function () {
-  toggleEffect('effects__preview--sepia');
+  switchEffect('effects__preview--sepia');
 });
 
 effectMarvin.addEventListener('click', function () {
-  toggleEffect('effects__preview--marvin');
+  switchEffect('effects__preview--marvin');
 });
 
 effectPhobos.addEventListener('click', function () {
-  toggleEffect('effects__preview--phobos');
+  switchEffect('effects__preview--phobos');
 });
 
 effectHeat.addEventListener('click', function () {
-  toggleEffect('effects__preview--heat');
+  switchEffect('effects__preview--heat');
 });
 
 effectLevelLine.addEventListener('mouseup', function (evt) {
@@ -286,7 +301,7 @@ var addComment = function (arrayElement) {
   return newComment;
 };
 
-var refreshBigPicture = function (arrayElement) {
+var renderBigPicture = function (arrayElement) {
   // удаляем старые комментарии
   bigPicture.querySelector('.social__comments').innerHTML = '';
   bigPicture.querySelector('.big-picture__img img').setAttribute('src', arrayElement.url);
@@ -310,7 +325,7 @@ picturesContainer.addEventListener('click', function (evt) {
   if (evt.target.closest('.picture')) {
     for (i = 1; i <= PHOTOS_COUNT; i++) {
       if (evt.target.closest('.picture').id === String(i)) {
-        refreshBigPicture(photosData[i - 1]);
+        renderBigPicture(photosData[i - 1]);
       }
     }
     bigPictureOpen();
