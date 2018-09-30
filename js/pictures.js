@@ -171,6 +171,9 @@ imgUploadOverlayCloseBtn.addEventListener('keydown', onUploadCloseBtnPressEnter)
 // Проверяем валидность формы с хэштегами и описанием
 // у сплиттера по пробелу есть недостаток - если написать в строку много пробелов подряд,
 // сплиттер вернёт массив пустых строк
+// вариант - написать цикл, который будет перебирать массив и убирать из него пустые строки
+
+// боже, как перестать плодить циклы в пределах одной функции
 
 var uploadPhotoInputCheck = function () {
   var hashtags = inputHashtags.value.toLowerCase().split(' ');
