@@ -32,6 +32,10 @@ var SCALE_MAX = 100;
 var SCALE_MIN = 25;
 var SCALE_STEP = 25;
 var SCALE_DEFAULT = 100;
+var HASHTAGS_MAX = 5;
+var HASHTAG_SYMBOL_REGEX = /^#/;
+var HASHTAG_LENGTH_REGEX = /^#[0-9A-Za-zА-Яа-яЁё#]{1,19}$/;
+var HASHTAG_WHITESPACE_REGEX = /^#[0-9A-Za-zА-Яа-яЁё]{1,19}$/;
 
 // МОДУЛЬ 3 ЗАДАНИЕ 1 =========================================================
 
@@ -164,68 +168,48 @@ imgUploadField.addEventListener('change', imgUploaderOpen);
 imgUploadOverlayCloseBtn.addEventListener('click', imgUploaderClose);
 imgUploadOverlayCloseBtn.addEventListener('keydown', onUploadCloseBtnPressEnter);
 
-// Проверяем валидность формы с хэштегами
+// Проверяем валидность формы с хэштегами и описанием
+// у сплиттера по пробелу есть недостаток - если написать в строку много пробелов подряд,
+// сплиттер вернёт массив пустых строк
 
-var hashtagsCheck = /^(#[0-9A-Za-zА-Яа-яЁё]{1,19}\s(?!\s*$)){0,4}(#[0-9A-Za-zА-Яа-яЁё]{1,19})?$/;
-// На этапе шлифовки проекта можно попробовать разбить эту проверку на несколько разных,
-// и для каждой выдавать своё сообщение. Но скорее всего это не критично
+var uploadPhotoInputCheck = function () {
+  var hashtags = inputHashtags.value.toLowerCase().split(' ');
+  for (var i = 0; i < hashtags.length; i++) {
+    if (!HASHTAG_SYMBOL_REGEX.test(hashtags[i])) {
+      inputHashtags.setCustomValidity('Хэштеги должны начинаться с символа #');
+    } else if (!HASHTAG_LENGTH_REGEX.test(hashtags[i])) {
+      inputHashtags.setCustomValidity('Хэштег должен содержать от 1 до 19 букв и цифр');
+    } else if (!HASHTAG_WHITESPACE_REGEX.test(hashtags[i])) {
+      inputHashtags.setCustomValidity('Между хэштегами нужно ставить пробелы');
+    } else {
+      inputHashtags.setCustomValidity('');
+    }
+  }
+  if (hashtags.length > HASHTAGS_MAX) {
+    inputHashtags.setCustomValidity('Можно добавить не больше пяти хэштегов');
+  }
+  for (var i = 0; i < hashtags.length - 1; i++) {
+    var comparableHashtag = hashtags[i];
 
-/*
-хэш-теги необязательны;
-хэш-тег начинается с символа # (решётка);
-хеш-тег не может состоять только из одной решётки;
-хэш-теги разделяются пробелами;
-один и тот же хэш-тег не может быть использован дважды;
-нельзя указать больше пяти хэш-тегов;
-максимальная длина одного хэш-тега 20 символов, включая решётку;
-теги нечувствительны к регистру: #ХэшТег и #хэштег считаются одним и тем же тегом.
-
-делим строку по пробелам
-1) если строка начинается не с символа решётки - предупреждение о решетке,
-2) если в строке одна решётка или решётка и больше 19 символов - предупреждение о длине хэштега,
-3) если в строке втречается два или больше символа решётки - предупреждение о пробелах
-4) если больше пяти строк - предупреждение о кол-ве хэштегов
-5) если хэштеги повторяются - предупреждение о повторе
-6) если поле пустое - ошибку не выводить
-* */
-var hashtagCheck = function (hashtag) {
-  if (/ /) {
-    inputHashtags.setCustomValidity('Хэштеги должны начинаться с символа #')
+    for (var j = i + 1; j < hashtags.length; j++) {
+      if (hashtags[j] === comparableHashtag && hashtags[j] !== '') {
+        inputHashtags.setCustomValidity('Хэштеги повторяются!');
+      }
+      // сравнение с пустой строкой нужно для устранения бага, при котором
+      // функция принимает пустые строки за одинаковые хэштеги
+    }
+  }
+  if (inputHashtags.value === '') {
+    inputHashtags.setCustomValidity('');
+  }
+  if (inputDescription.value.length > 140) {
+    inputDescription.setCustomValidity('Будь краток. В описании может быть не больше 140 знаков');
+  } else {
+    inputDescription.setCustomValidity('');
   }
 };
 
-
-submitButton.addEventListener('click', function () {
-  var hashtags = inputHashtags.value.toLowerCase().split(' ');
-  for (var i = 0; i < hashtags.length; i++) {
-    hashtagCheck(hashtags[i]);
-  }
-});
-
-// submitButton.addEventListener('click', function () {
-//   if (!hashtagsCheck.test(inputHashtags.value)) {
-//     inputHashtags.setCustomValidity('Алярм! В этом поле можно написать не больше пяти хэштегов. ' +
-//       'А в каждом хэштеге должно быть от 1 до 19 букв. ' +
-//       'И между хэштегами нужно ставить пробелы, а в конце - нет. ' +
-//       'Вот как всё строго ¯\\_(ツ)_/¯');
-//     errorHighlight(inputHashtags);
-//   }
-//   var hashtags = inputHashtags.value.toLowerCase().split(' ');
-//   for (var i = 0; i < hashtags.length - 1; i++) {
-//     var comparableHashtag = hashtags[i];
-//
-//     for (var j = i + 1; j < hashtags.length; j++) {
-//       if (hashtags[j] === comparableHashtag) {
-//         inputHashtags.setCustomValidity('Будь оригинальнее! Зачем тебе столько одинаковых хэштегов?');
-//         errorHighlight(inputHashtags);
-//       }
-//     }
-//   }
-//   if (inputDescription.value.length > 140) {
-//     inputDescription.setCustomValidity('Будь краток. В описании может быть не больше 140 знаков');
-//     errorHighlight(inputDescription);
-//   }
-// });
+submitButton.addEventListener('click', uploadPhotoInputCheck);
 
 // реализуем переключение и настройку фильтров
 
