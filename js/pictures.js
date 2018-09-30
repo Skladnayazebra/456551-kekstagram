@@ -109,68 +109,13 @@ for (var i = 0; i < PHOTOS_COUNT; i++) {
 }
 pictures.appendChild(pictureFragment);
 
-// МОДУЛЬ 4 ЗАДАНИЕ 1 =========================================================
+// МОДУЛЬ 4 ЗАДАНИЯ 1 и 2 =========================================================
 
-// реализуем открытие/закрытие окна загрузки фотографии и фото пользователя
-
+// задаём поведение для окна загрузки изображения
 
 var imgUploadField = document.querySelector('#upload-file');
 var imgUploadOverlay = document.querySelector('.img-upload__overlay');
 var imgUploadOverlayCloseBtn = document.querySelector('.img-upload__cancel');
-var bigPictureCloseBtn = document.querySelector('.big-picture__cancel');
-
-var imgUploaderOpen = function () {
-  imgUploadOverlay.classList.remove('hidden');
-  applyEffect(EFFECT_LEVEL_DEFAULT);
-  // функция applyEffect находится ниже в коде, в разделе с фильтрами
-};
-
-var imgUploaderClose = function () {
-  imgUploadOverlay.classList.add('hidden');
-  imgUploadField.value = null;
-};
-
-var onImgOverlayEscPress = function (evt) {
-  if (evt.keyCode === ESC_KEYCODE) {
-    imgUploaderClose();
-  }
-};
-
-var onUploadCloseBtnPressEnter = function (evt) {
-  if (evt.keyCode === ENTER_KEYCODE) {
-    imgUploaderClose();
-  }
-};
-
-var bigPictureOpen = function () {
-  bigPicture.classList.remove('hidden');
-};
-
-var bigPictureClose = function () {
-  bigPicture.classList.add('hidden');
-};
-
-imgUploadField.addEventListener('change', imgUploaderOpen);
-imgUploadOverlayCloseBtn.addEventListener('click', imgUploaderClose);
-imgUploadOverlayCloseBtn.addEventListener('keydown', onUploadCloseBtnPressEnter);
-document.addEventListener('keydown', onImgOverlayEscPress);
-
-bigPictureCloseBtn.addEventListener('click', bigPictureClose);
-bigPictureCloseBtn.addEventListener('keydown', function (evt) {
-  if (evt.keyCode === ENTER_KEYCODE) {
-    bigPictureClose();
-  }
-});
-
-document.querySelector('.picture').addEventListener('click', bigPictureOpen);
-
-
-
-// реализуем переключение и настройку фильтров
-
-// работает корректно, но на этапе доработки проекта нужно:
-// 1) сделать единую функцию для применения эффекта,
-// 2) вместо отдельных обработчков использовать общий с делегированием.
 
 var imgPreview = document.querySelector('.img-upload__preview img');
 var effectLevelLine = document.querySelector('.effect-level__line');
@@ -185,6 +130,108 @@ var effectSepia = document.querySelector('#effect-sepia');
 var effectMarvin = document.querySelector('#effect-marvin');
 var effectPhobos = document.querySelector('#effect-phobos');
 var effectHeat = document.querySelector('#effect-heat');
+
+var inputHashtags = document.querySelector('.text__hashtags');
+var inputDescription = document.querySelector('.text__description');
+var submitButton = document.querySelector('.img-upload__submit');
+
+var imgUploaderOpen = function () {
+  imgUploadOverlay.classList.remove('hidden');
+  applyEffect(EFFECT_LEVEL_DEFAULT);
+  // функция applyEffect находится ниже в коде, в разделе с фильтрами
+};
+
+var imgUploaderClose = function () {
+  imgUploadOverlay.classList.add('hidden');
+  imgUploadField.value = null;
+};
+
+var onUploadCloseBtnPressEnter = function (evt) {
+  if (evt.keyCode === ENTER_KEYCODE) {
+    imgUploaderClose();
+  }
+};
+
+var onImgOverlayEscPress = function (evt) {
+  if (evt.keyCode === ESC_KEYCODE) {
+    if (document.activeElement !== inputHashtags && document.activeElement !== inputDescription) {
+      imgUploaderClose();
+    }
+  }
+};
+document.addEventListener('keydown', onImgOverlayEscPress);
+imgUploadField.addEventListener('change', imgUploaderOpen);
+imgUploadOverlayCloseBtn.addEventListener('click', imgUploaderClose);
+imgUploadOverlayCloseBtn.addEventListener('keydown', onUploadCloseBtnPressEnter);
+
+// Проверяем валидность формы с хэштегами
+
+var hashtagsCheck = /^(#[0-9A-Za-zА-Яа-яЁё]{1,19}\s(?!\s*$)){0,4}(#[0-9A-Za-zА-Яа-яЁё]{1,19})?$/;
+// На этапе шлифовки проекта можно попробовать разбить эту проверку на несколько разных,
+// и для каждой выдавать своё сообщение. Но скорее всего это не критично
+
+/*
+хэш-теги необязательны;
+хэш-тег начинается с символа # (решётка);
+хеш-тег не может состоять только из одной решётки;
+хэш-теги разделяются пробелами;
+один и тот же хэш-тег не может быть использован дважды;
+нельзя указать больше пяти хэш-тегов;
+максимальная длина одного хэш-тега 20 символов, включая решётку;
+теги нечувствительны к регистру: #ХэшТег и #хэштег считаются одним и тем же тегом.
+
+делим строку по пробелам
+1) если строка начинается не с символа решётки - предупреждение о решетке,
+2) если в строке одна решётка или решётка и больше 19 символов - предупреждение о длине хэштега,
+3) если в строке втречается два или больше символа решётки - предупреждение о пробелах
+4) если больше пяти строк - предупреждение о кол-ве хэштегов
+5) если хэштеги повторяются - предупреждение о повторе
+6) если поле пустое - ошибку не выводить
+* */
+var hashtagCheck = function (hashtag) {
+  if (/ /) {
+    inputHashtags.setCustomValidity('Хэштеги должны начинаться с символа #')
+  }
+};
+
+
+submitButton.addEventListener('click', function () {
+  var hashtags = inputHashtags.value.toLowerCase().split(' ');
+  for (var i = 0; i < hashtags.length; i++) {
+    hashtagCheck(hashtags[i]);
+  }
+});
+
+// submitButton.addEventListener('click', function () {
+//   if (!hashtagsCheck.test(inputHashtags.value)) {
+//     inputHashtags.setCustomValidity('Алярм! В этом поле можно написать не больше пяти хэштегов. ' +
+//       'А в каждом хэштеге должно быть от 1 до 19 букв. ' +
+//       'И между хэштегами нужно ставить пробелы, а в конце - нет. ' +
+//       'Вот как всё строго ¯\\_(ツ)_/¯');
+//     errorHighlight(inputHashtags);
+//   }
+//   var hashtags = inputHashtags.value.toLowerCase().split(' ');
+//   for (var i = 0; i < hashtags.length - 1; i++) {
+//     var comparableHashtag = hashtags[i];
+//
+//     for (var j = i + 1; j < hashtags.length; j++) {
+//       if (hashtags[j] === comparableHashtag) {
+//         inputHashtags.setCustomValidity('Будь оригинальнее! Зачем тебе столько одинаковых хэштегов?');
+//         errorHighlight(inputHashtags);
+//       }
+//     }
+//   }
+//   if (inputDescription.value.length > 140) {
+//     inputDescription.setCustomValidity('Будь краток. В описании может быть не больше 140 знаков');
+//     errorHighlight(inputDescription);
+//   }
+// });
+
+// реализуем переключение и настройку фильтров
+
+// работает корректно, но на этапе доработки проекта нужно:
+// 1) сделать единую функцию для применения эффекта,
+// 2) вместо отдельных обработчков использовать общий с делегированием.
 
 var switchEffect = function (effectClass) {
   imgPreview.style.filter = '';
@@ -290,7 +337,8 @@ var increaseSize = function () {
 scaleControlSmaller.addEventListener('click', decreaseSize);
 scaleControlBigger.addEventListener('click', increaseSize);
 
-// реализуем вывод изображения в полноэкранный режим по клику
+
+// задаём поведение окна просмотра пользовательского фото
 
 
 var bigPicture = document.querySelector('.big-picture');
@@ -336,80 +384,21 @@ picturesContainer.addEventListener('click', function (evt) {
   }
 });
 
-// МОДУЛЬ 4 ЗАДАНИЕ 2 =========================================================
+var bigPictureCloseBtn = document.querySelector('.big-picture__cancel');
 
-// Проверяем валидность формы с хэштегами
-
-var inputHashtags = document.querySelector('.text__hashtags');
-var inputDescription = document.querySelector('.text__description');
-var submitButton = document.querySelector('.img-upload__submit');
-var hashtagsCheck = /^(#[0-9A-Za-zА-Яа-яЁё]{1,19}\s(?!\s*$)){0,4}(#[0-9A-Za-zА-Яа-яЁё]{1,19})?$/;
-// На этапе шлифовки проекта можно попробовать разбить эту проверку на несколько разных,
-// и для каждой выдавать своё сообщение. Но скорее всего это не критично
-var errorHighlight = function (field) {
-  field.style.border = '1px solid ##ff4f4f';
-  // почему-то не работает, позже гляну в чём дело
-};
-/*
-хэш-теги необязательны;
-хэш-тег начинается с символа # (решётка);
-хеш-тег не может состоять только из одной решётки;
-хэш-теги разделяются пробелами;
-один и тот же хэш-тег не может быть использован дважды;
-нельзя указать больше пяти хэш-тегов;
-максимальная длина одного хэш-тега 20 символов, включая решётку;
-теги нечувствительны к регистру: #ХэшТег и #хэштег считаются одним и тем же тегом.
-
-делим строку по пробелам
-1) если строка начинается не с символа решётки - предупреждение о решетке,
-2) если в строке одна решётка или решётка и больше 19 символов - предупреждение о длине хэштега,
-3) если в строке втречается два или больше символа решётки - предупреждение о пробелах
-4) если больше пяти строк - предупреждение о кол-ве хэштегов
-5) если хэштеги повторяются - предупреждение о повторе
-6) если поле пустое - ошибку не выводить
-* */
-var hashtagCheck = function (hashtag) {
-  if (/ /) {
-    inputHashtags.setCustomValidity('Хэштеги должны начинаться с символа #')
-  }
+var bigPictureOpen = function () {
+  bigPicture.classList.remove('hidden');
 };
 
+var bigPictureClose = function () {
+  bigPicture.classList.add('hidden');
+};
 
-submitButton.addEventListener('click', function () {
-  var hashtags = inputHashtags.value.toLowerCase().split(' ');
-  for (var i = 0; i < hashtags.length; i++) {
-    hashtagCheck(hashtags[i]);
+bigPictureCloseBtn.addEventListener('click', bigPictureClose);
+bigPictureCloseBtn.addEventListener('keydown', function (evt) {
+  if (evt.keyCode === ENTER_KEYCODE) {
+    bigPictureClose();
   }
 });
 
-// submitButton.addEventListener('click', function () {
-//   if (!hashtagsCheck.test(inputHashtags.value)) {
-//     inputHashtags.setCustomValidity('Алярм! В этом поле можно написать не больше пяти хэштегов. ' +
-//       'А в каждом хэштеге должно быть от 1 до 19 букв. ' +
-//       'И между хэштегами нужно ставить пробелы, а в конце - нет. ' +
-//       'Вот как всё строго ¯\\_(ツ)_/¯');
-//     errorHighlight(inputHashtags);
-//   }
-//   var hashtags = inputHashtags.value.toLowerCase().split(' ');
-//   for (var i = 0; i < hashtags.length - 1; i++) {
-//     var comparableHashtag = hashtags[i];
-//
-//     for (var j = i + 1; j < hashtags.length; j++) {
-//       if (hashtags[j] === comparableHashtag) {
-//         inputHashtags.setCustomValidity('Будь оригинальнее! Зачем тебе столько одинаковых хэштегов?');
-//         errorHighlight(inputHashtags);
-//       }
-//     }
-//   }
-//   if (inputDescription.value.length > 140) {
-//     inputDescription.setCustomValidity('Будь краток. В описании может быть не больше 140 знаков');
-//     errorHighlight(inputDescription);
-//   }
-// });
-//
-if (inputHashtags.focus || inputDescription.focus) {
-  document.removeEventListener('keydown', onImgOverlayEscPress);
-} else {
-  document.addEventListener('keydown', onImgOverlayEscPress);
-}
-// здесь что-то идёт не так
+document.querySelector('.picture').addEventListener('click', bigPictureOpen);
