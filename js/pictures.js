@@ -115,20 +115,31 @@ pictures.appendChild(pictureFragment);
 
 
 var imgUploadField = document.querySelector('#upload-file');
-var imgUploadPopup = document.querySelector('.img-upload__overlay');
-var imgUploadPopupCloseBtn = document.querySelector('.img-upload__cancel');
+var imgUploadOverlay = document.querySelector('.img-upload__overlay');
+var imgUploadOverlayCloseBtn = document.querySelector('.img-upload__cancel');
 var bigPictureCloseBtn = document.querySelector('.big-picture__cancel');
 
 var imgUploaderOpen = function () {
-  imgUploadPopup.classList.remove('hidden');
+  imgUploadOverlay.classList.remove('hidden');
   applyEffect(EFFECT_LEVEL_DEFAULT);
   // функция applyEffect находится ниже в коде, в разделе с фильтрами
 };
 
-
 var imgUploaderClose = function () {
-  imgUploadPopup.classList.add('hidden');
+  imgUploadOverlay.classList.add('hidden');
   imgUploadField.value = null;
+};
+
+var onImgOverlayEscPress = function (evt) {
+  if (evt.keyCode === ESC_KEYCODE) {
+    imgUploaderClose();
+  }
+};
+
+var onUploadCloseBtnPressEnter = function (evt) {
+  if (evt.keyCode === ENTER_KEYCODE) {
+    imgUploaderClose();
+  }
 };
 
 var bigPictureOpen = function () {
@@ -140,12 +151,9 @@ var bigPictureClose = function () {
 };
 
 imgUploadField.addEventListener('change', imgUploaderOpen);
-imgUploadPopupCloseBtn.addEventListener('click', imgUploaderClose);
-imgUploadPopupCloseBtn.addEventListener('keydown', function (evt) {
-  if (evt.keyCode === ENTER_KEYCODE) {
-    imgUploaderClose();
-  }
-});
+imgUploadOverlayCloseBtn.addEventListener('click', imgUploaderClose);
+imgUploadOverlayCloseBtn.addEventListener('keydown', onUploadCloseBtnPressEnter);
+document.addEventListener('keydown', onImgOverlayEscPress);
 
 bigPictureCloseBtn.addEventListener('click', bigPictureClose);
 bigPictureCloseBtn.addEventListener('keydown', function (evt) {
@@ -156,12 +164,7 @@ bigPictureCloseBtn.addEventListener('keydown', function (evt) {
 
 document.querySelector('.picture').addEventListener('click', bigPictureOpen);
 
-document.addEventListener('keydown', function (evt) {
-  if (evt.keyCode === ESC_KEYCODE) {
-    imgUploaderClose();
-    bigPictureClose();
-  }
-});
+
 
 // реализуем переключение и настройку фильтров
 
@@ -347,28 +350,66 @@ var errorHighlight = function (field) {
   field.style.border = '1px solid ##ff4f4f';
   // почему-то не работает, позже гляну в чём дело
 };
+/*
+хэш-теги необязательны;
+хэш-тег начинается с символа # (решётка);
+хеш-тег не может состоять только из одной решётки;
+хэш-теги разделяются пробелами;
+один и тот же хэш-тег не может быть использован дважды;
+нельзя указать больше пяти хэш-тегов;
+максимальная длина одного хэш-тега 20 символов, включая решётку;
+теги нечувствительны к регистру: #ХэшТег и #хэштег считаются одним и тем же тегом.
+
+делим строку по пробелам
+1) если строка начинается не с символа решётки - предупреждение о решетке,
+2) если в строке одна решётка или решётка и больше 19 символов - предупреждение о длине хэштега,
+3) если в строке втречается два или больше символа решётки - предупреждение о пробелах
+4) если больше пяти строк - предупреждение о кол-ве хэштегов
+5) если хэштеги повторяются - предупреждение о повторе
+6) если поле пустое - ошибку не выводить
+* */
+var hashtagCheck = function (hashtag) {
+  if (/ /) {
+    inputHashtags.setCustomValidity('Хэштеги должны начинаться с символа #')
+  }
+};
+
 
 submitButton.addEventListener('click', function () {
-  if (!hashtagsCheck.test(inputHashtags.value)) {
-    inputHashtags.setCustomValidity('Алярм! В этом поле можно написать не больше пяти хэштегов. ' +
-      'А в каждом хэштеге должно быть от 1 до 19 букв. ' +
-      'И между хэштегами нужно ставить пробелы, а в конце - нет. ' +
-      'Вот как всё строго ¯\\_(ツ)_/¯');
-    errorHighlight(inputHashtags);
-  }
   var hashtags = inputHashtags.value.toLowerCase().split(' ');
-  for (var i = 0; i < hashtags.length - 1; i++) {
-    var comparableHashtag = hashtags[i];
-
-    for (var j = i + 1; j < hashtags.length; j++) {
-      if (hashtags[j] === comparableHashtag) {
-        inputHashtags.setCustomValidity('Будь оригинальнее! Зачем тебе столько одинаковых хэштегов?');
-        errorHighlight(inputHashtags);
-      }
-    }
-  }
-  if (inputDescription.value.length > 140) {
-    inputDescription.setCustomValidity('Будь краток. В описании может быть не больше 140 знаков');
-    errorHighlight(inputDescription);
+  for (var i = 0; i < hashtags.length; i++) {
+    hashtagCheck(hashtags[i]);
   }
 });
+
+// submitButton.addEventListener('click', function () {
+//   if (!hashtagsCheck.test(inputHashtags.value)) {
+//     inputHashtags.setCustomValidity('Алярм! В этом поле можно написать не больше пяти хэштегов. ' +
+//       'А в каждом хэштеге должно быть от 1 до 19 букв. ' +
+//       'И между хэштегами нужно ставить пробелы, а в конце - нет. ' +
+//       'Вот как всё строго ¯\\_(ツ)_/¯');
+//     errorHighlight(inputHashtags);
+//   }
+//   var hashtags = inputHashtags.value.toLowerCase().split(' ');
+//   for (var i = 0; i < hashtags.length - 1; i++) {
+//     var comparableHashtag = hashtags[i];
+//
+//     for (var j = i + 1; j < hashtags.length; j++) {
+//       if (hashtags[j] === comparableHashtag) {
+//         inputHashtags.setCustomValidity('Будь оригинальнее! Зачем тебе столько одинаковых хэштегов?');
+//         errorHighlight(inputHashtags);
+//       }
+//     }
+//   }
+//   if (inputDescription.value.length > 140) {
+//     inputDescription.setCustomValidity('Будь краток. В описании может быть не больше 140 знаков');
+//     errorHighlight(inputDescription);
+//   }
+// });
+//
+if (inputHashtags.focus || inputDescription.focus) {
+  document.removeEventListener('keydown', onImgOverlayEscPress);
+} else {
+  document.addEventListener('keydown', onImgOverlayEscPress);
+}
+// здесь что-то идёт не так
