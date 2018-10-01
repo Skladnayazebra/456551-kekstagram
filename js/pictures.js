@@ -288,7 +288,7 @@ scaleControlBigger.addEventListener('click', increaseSize);
 
 // что же делать с повторяющимися итераторами?
 
-var hashtagsValidation = function () {
+var validateHashtags = function () {
   var hashtags = inputHashtags.value.toLowerCase().split(' ');
   var hashatgsWithoutSpaces;
   hashatgsWithoutSpaces = hashtags.filter(function (hashtag) {
@@ -303,16 +303,16 @@ var hashtagsValidation = function () {
     inputHashtags.setCustomValidity('Можно добавить не больше пяти хэштегов');
     return;
   }
-  var excludeDuplications = function (hashtag, i) {
-    return hashtags.indexOf(hashtag) === i;
+  var excludeDuplications = function (hashtag, j) {
+    return hashtags.indexOf(hashtag) === j;
   };
-  var hasDuplications = hashtags.length !== hashtags.filter(excludeDuplications).length;
+  var hasDuplications = hashtags !== hashtags.filter(excludeDuplications);
   if (hasDuplications) {
     inputHashtags.setCustomValidity('Хэштеги не должны повторяться');
     return;
   }
-  for (var i = 0; i < hashtags.length; i++) {
-    if (!HASHTAG_SYMBOL_REGEX.test(hashtags[i])) {
+  for (var j = 0; j < hashtags.length; j++) {
+    if (!HASHTAG_SYMBOL_REGEX.test(hashtags[j])) {
       inputHashtags.setCustomValidity('Хэштеги должны начинаться с символа #');
       break;
     } else if (!HASHTAG_LENGTH_REGEX.test(hashtags[i])) {
@@ -332,7 +332,7 @@ var hashtagsValidation = function () {
   }
 };
 
-submitButton.addEventListener('click', hashtagsValidation);
+submitButton.addEventListener('click', validateHashtags);
 
 // задаём поведение окна просмотра пользовательского фото
 
