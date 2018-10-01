@@ -286,58 +286,53 @@ scaleControlBigger.addEventListener('click', increaseSize);
 
 // проверка валидности формы с хэштегами и описанием
 
-/*
-у сплиттера по пробелу есть недостаток - если написать в строку много пробелов подряд,
-сплиттер вернёт массив пустых строк.
-вариант - написать цикл, который будет перебирать массив и убирать из него пустые строки
+// что же делать с повторяющимися итераторами?
 
-И что делать с повторяющимися итераторами?
-*/
-var uploadPhotoInputCheck = function () {
+var hashtagsValidation = function () {
   var hashtags = inputHashtags.value.toLowerCase().split(' ');
-  for (var i = 0; i < hashtags.length; i++) {
-    if (!HASHTAG_SYMBOL_REGEX.test(hashtags[i])) {
-      inputHashtags.setCustomValidity('Хэштеги должны начинаться с символа #');
-    } else if (!HASHTAG_LENGTH_REGEX.test(hashtags[i])) {
-      inputHashtags.setCustomValidity('Каждый хэштег должен содержать от 1 до 19 букв и цифр');
-    } else if (!HASHTAG_WHITESPACE_REGEX.test(hashtags[i])) {
-      inputHashtags.setCustomValidity('Между хэштегами нужно ставить пробелы');
-    } else {
-      inputHashtags.setCustomValidity('');
-    }
+  var hashatgsWithoutSpaces;
+  hashatgsWithoutSpaces = hashtags.filter(function (hashtag) {
+    return hashtag !== '';
+  });
+  hashtags = hashatgsWithoutSpaces;
+  if (hashtags.length === 0) {
+    inputHashtags.setCustomValidity('');
+    return;
   }
   if (hashtags.length > HASHTAGS_MAX) {
     inputHashtags.setCustomValidity('Можно добавить не больше пяти хэштегов');
+    return;
   }
-  for (var i = 0; i < hashtags.length - 1; i++) {
-    var comparableHashtag = hashtags[i];
-
-    for (var j = i + 1; j < hashtags.length; j++) {
-      if (hashtags[j] === comparableHashtag && hashtags[j] !== '') {
-        inputHashtags.setCustomValidity('Хэштеги повторяются!');
-      }
-      // сравнение с пустой строкой нужно для устранения бага, при котором
-      // функция принимает пустые строки за одинаковые хэштеги
+  var excludeDuplications = function (hashtag, i) {
+    return hashtags.indexOf(hashtag) === i;
+  };
+  var hasDuplications = hashtags.length !== hashtags.filter(excludeDuplications).length;
+  if (hasDuplications) {
+    inputHashtags.setCustomValidity('Хэштеги не должны повторяться');
+    return;
+  }
+  for (var i = 0; i < hashtags.length; i++) {
+    if (!HASHTAG_SYMBOL_REGEX.test(hashtags[i])) {
+      inputHashtags.setCustomValidity('Хэштеги должны начинаться с символа #');
+      break;
+    } else if (!HASHTAG_LENGTH_REGEX.test(hashtags[i])) {
+      inputHashtags.setCustomValidity('Каждый хэштег должен содержать от 1 до 19 букв и цифр');
+      break;
+    } else if (!HASHTAG_WHITESPACE_REGEX.test(hashtags[i])) {
+      inputHashtags.setCustomValidity('Между хэштегами нужно ставить пробелы');
+      break;
+    } else {
+      inputHashtags.setCustomValidity('');
     }
-  }
-  if (inputHashtags.value === '') {
-    inputHashtags.setCustomValidity('');
   }
   if (!inputHashtags.reportValidity()) {
     inputHashtags.style.border = '2px solid #f44242';
   } else {
     inputHashtags.style.border = '';
   }
-  if (inputDescription.value.length > 140) {
-    inputDescription.setCustomValidity('Будь краток. В описании может быть не больше 140 знаков');
-    inputDescription.style.border = '2px solid #f44242';
-  } else {
-    inputDescription.setCustomValidity('');
-    inputHashtags.style.border = '';
-  }
 };
 
-submitButton.addEventListener('click', uploadPhotoInputCheck);
+submitButton.addEventListener('click', hashtagsValidation);
 
 // задаём поведение окна просмотра пользовательского фото
 
@@ -379,11 +374,6 @@ var bigPictureOpen = function () {
 var bigPictureClose = function () {
   bigPicture.classList.add('hidden');
 };
-
-// При открытии окна big-picture на нём нет ни одного фокусируемого элемента.
-// если дать кнопке закрытия атрибут tabindex = "0" и задать закрытие по нажатию Enter на кнопку,
-// то окно будет закрываться, если пользователь просто нажмёт Enter при открытом окне.
-// По сути это дублирует закрытие по Esc, так что не будем прописывать этот обработчик
 
 var onBigPictureEscPress = function (evt) {
   if (evt.keyCode === ESC_KEYCODE) {
