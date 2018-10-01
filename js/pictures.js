@@ -103,7 +103,6 @@ var createPictureElement = function (pictureData) {
   picture.querySelector('.picture__likes').textContent = pictureData.likes;
   picture.querySelector('.picture__comments').textContent = String(pictureData.comments.length);
   picture.setAttribute('data-id', pictureData.id);
-  // здесь, возможно, стоит прописывать id не просто как число, а добавлять 'picture-'
   return picture;
 };
 
@@ -139,6 +138,8 @@ var inputHashtags = document.querySelector('.text__hashtags');
 var inputDescription = document.querySelector('.text__description');
 var submitButton = document.querySelector('.img-upload__submit');
 
+// открытие и закрытие окна
+
 var imgUploaderOpen = function () {
   imgUploadOverlay.classList.remove('hidden');
   applyEffect(EFFECT_LEVEL_DEFAULT);
@@ -148,7 +149,12 @@ var imgUploaderOpen = function () {
 var imgUploaderClose = function () {
   imgUploadOverlay.classList.add('hidden');
   imgUploadField.value = null;
+  applyEffect(EFFECT_LEVEL_DEFAULT);
+  inputHashtags.value = null;
+  inputDescription.value = null;
 };
+// Я не понимаю, почему браузер при перезагрузке/закрытии страницы
+// выдаёт сообщение, что в форме остались данные. Я же всё очищаю, разве нет?
 
 var onUploadCloseBtnPressEnter = function (evt) {
   if (evt.keyCode === ENTER_KEYCODE) {
@@ -167,52 +173,6 @@ document.addEventListener('keydown', onImgOverlayEscPress);
 imgUploadField.addEventListener('change', imgUploaderOpen);
 imgUploadOverlayCloseBtn.addEventListener('click', imgUploaderClose);
 imgUploadOverlayCloseBtn.addEventListener('keydown', onUploadCloseBtnPressEnter);
-
-// Проверяем валидность формы с хэштегами и описанием
-// у сплиттера по пробелу есть недостаток - если написать в строку много пробелов подряд,
-// сплиттер вернёт массив пустых строк
-// вариант - написать цикл, который будет перебирать массив и убирать из него пустые строки
-
-// боже, как перестать плодить циклы в пределах одной функции
-
-var uploadPhotoInputCheck = function () {
-  var hashtags = inputHashtags.value.toLowerCase().split(' ');
-  for (var i = 0; i < hashtags.length; i++) {
-    if (!HASHTAG_SYMBOL_REGEX.test(hashtags[i])) {
-      inputHashtags.setCustomValidity('Хэштеги должны начинаться с символа #');
-    } else if (!HASHTAG_LENGTH_REGEX.test(hashtags[i])) {
-      inputHashtags.setCustomValidity('Хэштег должен содержать от 1 до 19 букв и цифр');
-    } else if (!HASHTAG_WHITESPACE_REGEX.test(hashtags[i])) {
-      inputHashtags.setCustomValidity('Между хэштегами нужно ставить пробелы');
-    } else {
-      inputHashtags.setCustomValidity('');
-    }
-  }
-  if (hashtags.length > HASHTAGS_MAX) {
-    inputHashtags.setCustomValidity('Можно добавить не больше пяти хэштегов');
-  }
-  for (var i = 0; i < hashtags.length - 1; i++) {
-    var comparableHashtag = hashtags[i];
-
-    for (var j = i + 1; j < hashtags.length; j++) {
-      if (hashtags[j] === comparableHashtag && hashtags[j] !== '') {
-        inputHashtags.setCustomValidity('Хэштеги повторяются!');
-      }
-      // сравнение с пустой строкой нужно для устранения бага, при котором
-      // функция принимает пустые строки за одинаковые хэштеги
-    }
-  }
-  if (inputHashtags.value === '') {
-    inputHashtags.setCustomValidity('');
-  }
-  if (inputDescription.value.length > 140) {
-    inputDescription.setCustomValidity('Будь краток. В описании может быть не больше 140 знаков');
-  } else {
-    inputDescription.setCustomValidity('');
-  }
-};
-
-submitButton.addEventListener('click', uploadPhotoInputCheck);
 
 // реализуем переключение и настройку фильтров
 
@@ -324,11 +284,66 @@ var increaseSize = function () {
 scaleControlSmaller.addEventListener('click', decreaseSize);
 scaleControlBigger.addEventListener('click', increaseSize);
 
+// проверка валидности формы с хэштегами и описанием
+
+/*
+у сплиттера по пробелу есть недостаток - если написать в строку много пробелов подряд,
+сплиттер вернёт массив пустых строк.
+вариант - написать цикл, который будет перебирать массив и убирать из него пустые строки
+
+И что делать с повторяющимися итераторами?
+*/
+var uploadPhotoInputCheck = function () {
+  var hashtags = inputHashtags.value.toLowerCase().split(' ');
+  for (var i = 0; i < hashtags.length; i++) {
+    if (!HASHTAG_SYMBOL_REGEX.test(hashtags[i])) {
+      inputHashtags.setCustomValidity('Хэштеги должны начинаться с символа #');
+    } else if (!HASHTAG_LENGTH_REGEX.test(hashtags[i])) {
+      inputHashtags.setCustomValidity('Каждый хэштег должен содержать от 1 до 19 букв и цифр');
+    } else if (!HASHTAG_WHITESPACE_REGEX.test(hashtags[i])) {
+      inputHashtags.setCustomValidity('Между хэштегами нужно ставить пробелы');
+    } else {
+      inputHashtags.setCustomValidity('');
+    }
+  }
+  if (hashtags.length > HASHTAGS_MAX) {
+    inputHashtags.setCustomValidity('Можно добавить не больше пяти хэштегов');
+  }
+  for (var i = 0; i < hashtags.length - 1; i++) {
+    var comparableHashtag = hashtags[i];
+
+    for (var j = i + 1; j < hashtags.length; j++) {
+      if (hashtags[j] === comparableHashtag && hashtags[j] !== '') {
+        inputHashtags.setCustomValidity('Хэштеги повторяются!');
+      }
+      // сравнение с пустой строкой нужно для устранения бага, при котором
+      // функция принимает пустые строки за одинаковые хэштеги
+    }
+  }
+  if (inputHashtags.value === '') {
+    inputHashtags.setCustomValidity('');
+  }
+  if (!inputHashtags.reportValidity()) {
+    inputHashtags.style.border = '2px solid #f44242';
+  } else {
+    inputHashtags.style.border = '';
+  }
+  if (inputDescription.value.length > 140) {
+    inputDescription.setCustomValidity('Будь краток. В описании может быть не больше 140 знаков');
+    inputDescription.style.border = '2px solid #f44242';
+  } else {
+    inputDescription.setCustomValidity('');
+    inputHashtags.style.border = '';
+  }
+};
+
+submitButton.addEventListener('click', uploadPhotoInputCheck);
 
 // задаём поведение окна просмотра пользовательского фото
 
-
+var picturesContainer = document.querySelector('.pictures');
 var bigPicture = document.querySelector('.big-picture');
+var bigPictureCloseBtn = document.querySelector('.big-picture__cancel');
 var commentTemplate = document.querySelector('#social-comment').content.querySelector('li.social__comment');
 var commentsFragment = document.createDocumentFragment();
 
@@ -340,7 +355,6 @@ var addComment = function (arrayElement) {
   newComment.querySelector('.social__text').textContent = arrayElement;
   return newComment;
 };
-
 // наполнение блока bigPicture данными
 var renderBigPicture = function (arrayElement) {
   bigPicture.querySelector('.social__comments').innerHTML = '';
@@ -358,21 +372,6 @@ var renderBigPicture = function (arrayElement) {
   return bigPicture;
 };
 
-var picturesContainer = document.querySelector('.pictures');
-
-picturesContainer.addEventListener('click', function (evt) {
-  if (evt.target.closest('.picture')) {
-    for (i = 1; i <= PHOTOS_COUNT; i++) {
-      if (+evt.target.closest('.picture').id === i) {
-        renderBigPicture(photosData[i - 1]);
-      }
-    }
-    bigPictureOpen();
-  }
-});
-
-var bigPictureCloseBtn = document.querySelector('.big-picture__cancel');
-
 var bigPictureOpen = function () {
   bigPicture.classList.remove('hidden');
 };
@@ -381,11 +380,27 @@ var bigPictureClose = function () {
   bigPicture.classList.add('hidden');
 };
 
-bigPictureCloseBtn.addEventListener('click', bigPictureClose);
-bigPictureCloseBtn.addEventListener('keydown', function (evt) {
-  if (evt.keyCode === ENTER_KEYCODE) {
+// При открытии окна big-picture на нём нет ни одного фокусируемого элемента.
+// если дать кнопке закрытия атрибут tabindex = "0" и задать закрытие по нажатию Enter на кнопку,
+// то окно будет закрываться, если пользователь просто нажмёт Enter при открытом окне.
+// По сути это дублирует закрытие по Esc, так что не будем прописывать этот обработчик
+
+var onBigPictureEscPress = function (evt) {
+  if (evt.keyCode === ESC_KEYCODE) {
     bigPictureClose();
+  }
+};
+
+picturesContainer.addEventListener('click', function (evt) {
+  if (evt.target.closest('.picture')) {
+    for (i = 1; i <= PHOTOS_COUNT; i++) {
+      if (+evt.target.closest('.picture').dataset.id === i) {
+        renderBigPicture(photosData[i - 1]);
+      }
+    }
+    bigPictureOpen();
   }
 });
 
-document.querySelector('.picture').addEventListener('click', bigPictureOpen);
+document.addEventListener('keydown', onBigPictureEscPress);
+bigPictureCloseBtn.addEventListener('click', bigPictureClose);
