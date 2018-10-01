@@ -289,12 +289,12 @@ scaleControlBigger.addEventListener('click', increaseSize);
 // что же делать с повторяющимися итераторами?
 
 var validateHashtags = function () {
-  var hashtags = inputHashtags.value.toLowerCase().split(' ');
-  var hashatgsWithoutSpaces;
-  hashatgsWithoutSpaces = hashtags.filter(function (hashtag) {
-    return hashtag !== '';
-  });
-  hashtags = hashatgsWithoutSpaces;
+  var hashtags = inputHashtags.value
+    .toLowerCase()
+    .split(' ')
+    .filter(function (hashtag) {
+      return hashtag !== '';
+    });
   if (hashtags.length === 0) {
     inputHashtags.setCustomValidity('');
     return;
