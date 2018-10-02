@@ -130,6 +130,7 @@ var imgPreview = document.querySelector('.img-upload__preview img');
 var imgUploaderOpen = function () {
   imgUploadOverlay.classList.remove('hidden');
   applyEffect(EFFECT_LEVEL_DEFAULT);
+  document.querySelector('.effect-level__value').value = '';
   // функция applyEffect находится ниже в коде, в разделе с фильтрами
 };
 
@@ -212,6 +213,7 @@ var switchEffect = function (effectClass) {
   effectLevelField.classList.remove('hidden');
   effectLevelPin.style.left = EFFECT_LEVEL_DEFAULT + '%';
   effectLevelDepth.style.width = EFFECT_LEVEL_DEFAULT + '%';
+  document.querySelector('.effect-level__value').value = String(EFFECT_LEVEL_DEFAULT);
 };
 
 var applyEffect = function (effectLevel) {
@@ -219,6 +221,7 @@ var applyEffect = function (effectLevel) {
     case 'effect-none' :
       imgPreview.style.filter = '';
       effectLevelField.classList.add('hidden');
+      document.querySelector('.effect-level__value').value = '';
       break;
     case 'effect-chrome' :
       imgPreview.style.filter = 'grayscale(' + effectLevel / 100 + ')';
