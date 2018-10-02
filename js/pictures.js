@@ -32,6 +32,10 @@ var SCALE_MAX = 100;
 var SCALE_MIN = 25;
 var SCALE_STEP = 25;
 var SCALE_DEFAULT = 100;
+var HASHTAGS_MAX = 5;
+var HASHTAG_SYMBOL_REGEX = /^#/;
+var HASHTAG_LENGTH_REGEX = /^#[0-9A-Za-zА-Яа-яЁё#]{1,19}$/;
+var HASHTAG_WHITESPACE_REGEX = /^#[0-9A-Za-zА-Яа-яЁё]{1,19}$/;
 
 // МОДУЛЬ 3 ЗАДАНИЕ 1 =========================================================
 
@@ -98,8 +102,7 @@ var createPictureElement = function (pictureData) {
   picture.querySelector('.picture__img').setAttribute('src', pictureData.url);
   picture.querySelector('.picture__likes').textContent = pictureData.likes;
   picture.querySelector('.picture__comments').textContent = String(pictureData.comments.length);
-  picture.id = pictureData.id;
-  // здесь, возможно, стоит прописывать id не просто как число, а добавлять 'picture-'
+  picture.setAttribute('data-id', pictureData.id);
   return picture;
 };
 
@@ -109,61 +112,13 @@ for (var i = 0; i < PHOTOS_COUNT; i++) {
 }
 pictures.appendChild(pictureFragment);
 
-// МОДУЛЬ 4 ЗАДАНИЕ 1 =========================================================
+// МОДУЛЬ 4 ЗАДАНИЯ 1 и 2 =========================================================
 
-// реализуем открытие/закрытие окна загрузки фотографии и фото пользователя
-
+// задаём поведение для окна загрузки изображения
 
 var imgUploadField = document.querySelector('#upload-file');
-var imgUploadPopup = document.querySelector('.img-upload__overlay');
-var imgUploadPopupCloseBtn = document.querySelector('.img-upload__cancel');
-var bigPictureCloseBtn = document.querySelector('.big-picture__cancel');
-
-var imgUploaderOpen = function () {
-  imgUploadPopup.classList.remove('hidden');
-  applyEffect(EFFECT_LEVEL_DEFAULT);
-  // функция applyEffect находится ниже в коде, в разделе с фильтрами
-};
-
-
-var imgUploaderClose = function () {
-  imgUploadPopup.classList.add('hidden');
-  imgUploadField.value = null;
-};
-
-var bigPictureOpen = function () {
-  bigPicture.classList.remove('hidden');
-};
-
-var bigPictureClose = function () {
-  bigPicture.classList.add('hidden');
-};
-
-imgUploadField.addEventListener('change', imgUploaderOpen);
-imgUploadPopupCloseBtn.addEventListener('click', imgUploaderClose);
-imgUploadPopupCloseBtn.addEventListener('keydown', function (evt) {
-  if (evt.keyCode === ENTER_KEYCODE) {
-    imgUploaderClose();
-  }
-});
-
-bigPictureCloseBtn.addEventListener('click', bigPictureClose);
-bigPictureCloseBtn.addEventListener('keydown', function (evt) {
-  if (evt.keyCode === ENTER_KEYCODE) {
-    bigPictureClose();
-  }
-});
-
-document.querySelector('.picture').addEventListener('click', bigPictureOpen);
-
-document.addEventListener('keydown', function (evt) {
-  if (evt.keyCode === ESC_KEYCODE) {
-    imgUploaderClose();
-    bigPictureClose();
-  }
-});
-
-// реализуем переключение и настройку фильтров
+var imgUploadOverlay = document.querySelector('.img-upload__overlay');
+var imgUploadOverlayCloseBtn = document.querySelector('.img-upload__cancel');
 
 var imgPreview = document.querySelector('.img-upload__preview img');
 var effectLevelLine = document.querySelector('.effect-level__line');
@@ -179,7 +134,53 @@ var effectMarvin = document.querySelector('#effect-marvin');
 var effectPhobos = document.querySelector('#effect-phobos');
 var effectHeat = document.querySelector('#effect-heat');
 
-var toggleEffect = function (effectClass) {
+var inputHashtags = document.querySelector('.text__hashtags');
+var inputDescription = document.querySelector('.text__description');
+var submitButton = document.querySelector('.img-upload__submit');
+
+// открытие и закрытие окна
+
+var imgUploaderOpen = function () {
+  imgUploadOverlay.classList.remove('hidden');
+  applyEffect(EFFECT_LEVEL_DEFAULT);
+  // функция applyEffect находится ниже в коде, в разделе с фильтрами
+};
+
+var imgUploaderClose = function () {
+  imgUploadOverlay.classList.add('hidden');
+  imgUploadField.value = null;
+  applyEffect(EFFECT_LEVEL_DEFAULT);
+  inputHashtags.value = null;
+  inputDescription.value = null;
+};
+// Я не понимаю, почему браузер при перезагрузке/закрытии страницы
+// выдаёт сообщение, что в форме остались данные. Я же всё очищаю, разве нет?
+
+var onUploadCloseBtnPressEnter = function (evt) {
+  if (evt.keyCode === ENTER_KEYCODE) {
+    imgUploaderClose();
+  }
+};
+
+var onImgOverlayEscPress = function (evt) {
+  if (evt.keyCode === ESC_KEYCODE) {
+    if (document.activeElement !== inputHashtags && document.activeElement !== inputDescription) {
+      imgUploaderClose();
+    }
+  }
+};
+document.addEventListener('keydown', onImgOverlayEscPress);
+imgUploadField.addEventListener('change', imgUploaderOpen);
+imgUploadOverlayCloseBtn.addEventListener('click', imgUploaderClose);
+imgUploadOverlayCloseBtn.addEventListener('keydown', onUploadCloseBtnPressEnter);
+
+// реализуем переключение и настройку фильтров
+
+// работает корректно, но на этапе доработки проекта нужно:
+// 1) сделать единую функцию для применения эффекта,
+// 2) вместо отдельных обработчков использовать общий с делегированием.
+
+var switchEffect = function (effectClass) {
   imgPreview.style.filter = '';
   imgPreview.className = effectClass;
   effectLevelField.classList.remove('hidden');
@@ -210,30 +211,43 @@ var applyEffect = function (effectLevel) {
       break;
   }
 };
+/*
+можно попробовать вот такую модификацию:
+
+var styles = {
+ 'effect-none': '',
+ 'effect-chrome': 'grayscale(' + effectLevel / 100 + ')',
+ 'effect-sepia': 'sepia(' + effectLevel / 100 + ')',
+ ...
+}
+
+var effectName = document.querySelector('.effects__radio:checked').id;
+imgPreview.style.filter = styles[effectName];
+*/
 
 effectNone.addEventListener('click', function () {
-  toggleEffect('effects__preview--none');
+  switchEffect('effects__preview--none');
   effectLevelField.classList.add('hidden');
 });
 
 effectChrome.addEventListener('click', function () {
-  toggleEffect('effects__preview--chrome');
+  switchEffect('effects__preview--chrome');
 });
 
 effectSepia.addEventListener('click', function () {
-  toggleEffect('effects__preview--sepia');
+  switchEffect('effects__preview--sepia');
 });
 
 effectMarvin.addEventListener('click', function () {
-  toggleEffect('effects__preview--marvin');
+  switchEffect('effects__preview--marvin');
 });
 
 effectPhobos.addEventListener('click', function () {
-  toggleEffect('effects__preview--phobos');
+  switchEffect('effects__preview--phobos');
 });
 
 effectHeat.addEventListener('click', function () {
-  toggleEffect('effects__preview--heat');
+  switchEffect('effects__preview--heat');
 });
 
 effectLevelLine.addEventListener('mouseup', function (evt) {
@@ -270,10 +284,61 @@ var increaseSize = function () {
 scaleControlSmaller.addEventListener('click', decreaseSize);
 scaleControlBigger.addEventListener('click', increaseSize);
 
-// реализуем вывод изображения в полноэкранный режим по клику
+// проверка валидности формы с хэштегами и описанием
 
-// наполнение блока bigPicture сгенерированными данными
+// что же делать с повторяющимися итераторами?
+
+var validateHashtags = function () {
+  var hashtags = inputHashtags.value
+    .toLowerCase()
+    .split(' ')
+    .filter(function (hashtag) {
+      return hashtag !== '';
+    });
+  if (hashtags.length === 0) {
+    inputHashtags.setCustomValidity('');
+    return;
+  }
+  if (hashtags.length > HASHTAGS_MAX) {
+    inputHashtags.setCustomValidity('Можно добавить не больше пяти хэштегов');
+    return;
+  }
+  var excludeDuplications = function (hashtag, j) {
+    return hashtags.indexOf(hashtag) === j;
+  };
+  var hasDuplications = hashtags !== hashtags.filter(excludeDuplications);
+  if (hasDuplications) {
+    inputHashtags.setCustomValidity('Хэштеги не должны повторяться');
+    return;
+  }
+  for (var j = 0; j < hashtags.length; j++) {
+    if (!HASHTAG_SYMBOL_REGEX.test(hashtags[j])) {
+      inputHashtags.setCustomValidity('Хэштеги должны начинаться с символа #');
+      break;
+    } else if (!HASHTAG_LENGTH_REGEX.test(hashtags[i])) {
+      inputHashtags.setCustomValidity('Каждый хэштег должен содержать от 1 до 19 букв и цифр');
+      break;
+    } else if (!HASHTAG_WHITESPACE_REGEX.test(hashtags[i])) {
+      inputHashtags.setCustomValidity('Между хэштегами нужно ставить пробелы');
+      break;
+    } else {
+      inputHashtags.setCustomValidity('');
+    }
+  }
+  if (!inputHashtags.reportValidity()) {
+    inputHashtags.style.border = '2px solid #f44242';
+  } else {
+    inputHashtags.style.border = '';
+  }
+};
+
+submitButton.addEventListener('click', validateHashtags);
+
+// задаём поведение окна просмотра пользовательского фото
+
+var picturesContainer = document.querySelector('.pictures');
 var bigPicture = document.querySelector('.big-picture');
+var bigPictureCloseBtn = document.querySelector('.big-picture__cancel');
 var commentTemplate = document.querySelector('#social-comment').content.querySelector('li.social__comment');
 var commentsFragment = document.createDocumentFragment();
 
@@ -285,9 +350,8 @@ var addComment = function (arrayElement) {
   newComment.querySelector('.social__text').textContent = arrayElement;
   return newComment;
 };
-
-var refreshBigPicture = function (arrayElement) {
-  // удаляем старые комментарии
+// наполнение блока bigPicture данными
+var renderBigPicture = function (arrayElement) {
   bigPicture.querySelector('.social__comments').innerHTML = '';
   bigPicture.querySelector('.big-picture__img img').setAttribute('src', arrayElement.url);
   bigPicture.querySelector('.big-picture__social .likes-count').textContent = arrayElement.likes;
@@ -303,16 +367,30 @@ var refreshBigPicture = function (arrayElement) {
   return bigPicture;
 };
 
+var bigPictureOpen = function () {
+  bigPicture.classList.remove('hidden');
+};
 
-var picturesContainer = document.querySelector('.pictures');
+var bigPictureClose = function () {
+  bigPicture.classList.add('hidden');
+};
+
+var onBigPictureEscPress = function (evt) {
+  if (evt.keyCode === ESC_KEYCODE) {
+    bigPictureClose();
+  }
+};
 
 picturesContainer.addEventListener('click', function (evt) {
   if (evt.target.closest('.picture')) {
     for (i = 1; i <= PHOTOS_COUNT; i++) {
-      if (evt.target.closest('.picture').id === String(i)) {
-        refreshBigPicture(photosData[i - 1]);
+      if (+evt.target.closest('.picture').dataset.id === i) {
+        renderBigPicture(photosData[i - 1]);
       }
     }
     bigPictureOpen();
   }
 });
+
+document.addEventListener('keydown', onBigPictureEscPress);
+bigPictureCloseBtn.addEventListener('click', bigPictureClose);
