@@ -280,11 +280,10 @@ var onPinMouseDown = function (evt) {
   evt.preventDefault();
   var effectLineStart = effectLevelLine.getBoundingClientRect().x;
   var effectLineWidth = effectLevelLine.getBoundingClientRect().width;
-  var pinPosition = evt.clientX - effectLineStart;
 
   var onPinMouseMove = function (moveEvt) {
     moveEvt.preventDefault();
-    pinPosition = moveEvt.clientX - effectLineStart;
+    var pinPosition = moveEvt.clientX - effectLineStart;
     if (pinPosition >= 0 && pinPosition <= effectLineWidth) {
       effectLevelPin.style.left = pinPosition + 'px';
       effectLevelDepth.style.width = pinPosition + 'px';
