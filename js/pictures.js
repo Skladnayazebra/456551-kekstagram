@@ -107,10 +107,14 @@ var createPictureElement = function (pictureData) {
 };
 
 // наполнение фрагмента элементоами picture и вывод на страницу
-for (var i = 0; i < PHOTOS_COUNT; i++) {
-  pictureFragment.appendChild(createPictureElement(photosData[i]));
-}
-pictures.appendChild(pictureFragment);
+var fillPicturesContainer = function (counter) {
+  for (var i = 0; i < counter; i++) {
+    pictureFragment.appendChild(createPictureElement(photosData[i]));
+  }
+  pictures.appendChild(pictureFragment);
+};
+
+fillPicturesContainer(PHOTOS_COUNT);
 
 // МОДУЛЬ 4 ЗАДАНИЯ 1 и 2 =========================================================
 
@@ -303,16 +307,16 @@ var validateHashtags = function () {
     inputHashtags.setCustomValidity('Можно добавить не больше пяти хэштегов');
     return;
   }
-  var excludeDuplications = function (hashtag, j) {
-    return hashtags.indexOf(hashtag) === j;
+  var excludeDuplications = function (hashtag, i) {
+    return hashtags.indexOf(hashtag) === i;
   };
-  var hasDuplications = hashtags !== hashtags.filter(excludeDuplications);
+  var hasDuplications = hashtags.length !== hashtags.filter(excludeDuplications).length;
   if (hasDuplications) {
     inputHashtags.setCustomValidity('Хэштеги не должны повторяться');
     return;
   }
-  for (var j = 0; j < hashtags.length; j++) {
-    if (!HASHTAG_SYMBOL_REGEX.test(hashtags[j])) {
+  for (var i = 0; i < hashtags.length; i++) {
+    if (!HASHTAG_SYMBOL_REGEX.test(hashtags[i])) {
       inputHashtags.setCustomValidity('Хэштеги должны начинаться с символа #');
       break;
     } else if (!HASHTAG_LENGTH_REGEX.test(hashtags[i])) {
@@ -358,8 +362,8 @@ var renderBigPicture = function (arrayElement) {
   bigPicture.querySelector('.big-picture__social .comments-count').textContent = String(arrayElement.comments.length);
   bigPicture.querySelector('.big-picture__social .social__caption').textContent = arrayElement.description;
   var commentsNumber = arrayElement.comments.length;
-  for (var j = 0; j < commentsNumber; j++) {
-    commentsFragment.appendChild(addComment(arrayElement.comments[j]));
+  for (var i = 0; i < commentsNumber; i++) {
+    commentsFragment.appendChild(addComment(arrayElement.comments[i]));
   }
   bigPicture.querySelector('.social__comments').appendChild(commentsFragment);
   bigPicture.querySelector('.social__comment-count').classList.add('visually-hidden');
@@ -375,22 +379,23 @@ var bigPictureClose = function () {
   bigPicture.classList.add('hidden');
 };
 
-var onBigPictureEscPress = function (evt) {
-  if (evt.keyCode === ESC_KEYCODE) {
-    bigPictureClose();
-  }
-};
-
-picturesContainer.addEventListener('click', function (evt) {
+var onPictureClick = function (evt) {
   if (evt.target.closest('.picture')) {
-    for (i = 1; i <= PHOTOS_COUNT; i++) {
+    for (var i = 1; i <= PHOTOS_COUNT; i++) {
       if (+evt.target.closest('.picture').dataset.id === i) {
         renderBigPicture(photosData[i - 1]);
       }
     }
     bigPictureOpen();
   }
-});
+};
 
+var onBigPictureEscPress = function (evt) {
+  if (evt.keyCode === ESC_KEYCODE) {
+    bigPictureClose();
+  }
+};
+
+picturesContainer.addEventListener('click', onPictureClick);
 document.addEventListener('keydown', onBigPictureEscPress);
 bigPictureCloseBtn.addEventListener('click', bigPictureClose);
