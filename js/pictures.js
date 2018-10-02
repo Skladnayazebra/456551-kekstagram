@@ -289,6 +289,7 @@ var onPinMouseDown = function (evt) {
       effectLevelPin.style.left = pinPosition + 'px';
       effectLevelDepth.style.width = pinPosition + 'px';
       effectLevelValue = Math.round(pinPosition / effectLineWidth * 100);
+      document.querySelector('.effect-level__value').value = String(effectLevelValue);
       applyEffect(effectLevelValue);
     }
   };
