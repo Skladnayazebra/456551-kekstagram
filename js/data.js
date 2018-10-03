@@ -1,11 +1,6 @@
 'use strict';
 
 (function () {
-  var ESC_KEYCODE = 27;
-  var ENTER_KEYCODE = 13;
-  // я не уверен, что коды клавиш нужно объявлять именно в этом модуле,
-  // но пока пусть будут тут. Потом можно будет создать отдельный файл
-  // с общими методами и переменными.
   var PHOTOS_COUNT = 25;
   var LIKES_MIN = 15;
   var LIKES_MAX = 200;
@@ -28,6 +23,7 @@
     'Цените каждое мгновенье. Цените тех, кто рядом с вами и отгоняйте все сомненья. Не обижайте всех словами......',
     'Вот это тачка!'
   ];
+
   var generateNumber = function (min, max) {
     var number;
     number = Math.floor(Math.random() * (max + 1 - min) + min);
@@ -74,8 +70,6 @@
   generatePhotosData(PHOTOS_COUNT);
 
   window.data = {
-    ESC_KEYCODE: ESC_KEYCODE,
-    ENTER_KEYCODE: ENTER_KEYCODE,
     PHOTOS_COUNT: PHOTOS_COUNT,
     photosData: photosData,
     generateNumber: generateNumber

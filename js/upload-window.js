@@ -7,35 +7,34 @@
   var inputHashtags = document.querySelector('.text__hashtags');
   var inputDescription = document.querySelector('.text__description');
 
-  var imgUploaderOpen = function () {
-    imgUploadOverlay.classList.remove('hidden');
+  var onUploadOverlaySetEffect = function () {
     window.effects.applyEffect(window.effects.EFFECT_LEVEL_DEFAULT);
     document.querySelector('.effect-level__value').value = '';
   };
 
-  var imgUploaderClose = function () {
-    imgUploadOverlay.classList.add('hidden');
+  var onUploaderOverlayClean = function () {
     imgUploadField.value = null;
     window.effects.applyEffect(window.effects.EFFECT_LEVEL_DEFAULT);
     inputHashtags.value = null;
     inputDescription.value = null;
   };
 
-  var onUploadCloseBtnPressEnter = function (evt) {
-    if (evt.keyCode === window.data.ENTER_KEYCODE) {
-      imgUploaderClose();
+  imgUploadField.addEventListener('change', function () {
+    window.util.elementOpen(imgUploadOverlay);
+    onUploadOverlaySetEffect();
+  });
+  document.addEventListener('keydown', function (evt) {
+    if (document.activeElement !== inputHashtags && document.activeElement !== inputDescription) {
+      window.util.onEscPressClose(evt, imgUploadOverlay);
+      onUploaderOverlayClean();
     }
-  };
-
-  var onImgOverlayEscPress = function (evt) {
-    if (evt.keyCode === window.data.ESC_KEYCODE) {
-      if (document.activeElement !== inputHashtags && document.activeElement !== inputDescription) {
-        imgUploaderClose();
-      }
-    }
-  };
-  document.addEventListener('keydown', onImgOverlayEscPress);
-  imgUploadField.addEventListener('change', imgUploaderOpen);
-  imgUploadOverlayCloseBtn.addEventListener('click', imgUploaderClose);
-  imgUploadOverlayCloseBtn.addEventListener('keydown', onUploadCloseBtnPressEnter);
+  });
+  imgUploadOverlayCloseBtn.addEventListener('click', function () {
+    window.util.elementClose(imgUploadOverlay);
+    onUploaderOverlayClean();
+  });
+  imgUploadOverlayCloseBtn.addEventListener('keydown', function (evt) {
+    window.util.onEnterPressClose(evt, imgUploadOverlay);
+    onUploaderOverlayClean();
+  });
 })();
