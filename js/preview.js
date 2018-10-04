@@ -7,8 +7,7 @@
   var bigPictureCloseBtn = document.querySelector('.big-picture__cancel');
   var commentTemplate = document.querySelector('#social-comment').content.querySelector('li.social__comment');
   var commentsFragment = document.createDocumentFragment();
-  var photosData = [];
-  window.data.generatePhotosData(photosData);
+  var photosData = window.data.generatePhotosData();
 
   // добавление одного комментария в блок просмотра фотографии
   var addComment = function (arrayElement) {

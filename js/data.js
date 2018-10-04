@@ -59,7 +59,8 @@
     return photoObject;
   };
 
-  var generatePhotosData = function (containerArray) {
+  var generatePhotosData = function () {
+    var containerArray = [];
     for (var i = 1; i <= PHOTOS_COUNT; i++) {
       containerArray.push(createObject(i));
     }

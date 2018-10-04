@@ -4,8 +4,7 @@
   var pictures = document.querySelector('.pictures');
   var pictureTemplate = document.querySelector('#picture').content.querySelector('a.picture');
   var pictureFragment = document.createDocumentFragment();
-  var photosData = [];
-  window.data.generatePhotosData(photosData);
+  var photosData = window.data.generatePhotosData();
 
   var createPictureElement = function (pictureData) {
     var picture = pictureTemplate.cloneNode(true);
