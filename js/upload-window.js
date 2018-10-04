@@ -20,7 +20,7 @@
   };
 
   imgUploadField.addEventListener('change', function () {
-    window.util.elementOpen(imgUploadOverlay);
+    window.util.showElement(imgUploadOverlay);
     onUploadOverlaySetEffect();
   });
   document.addEventListener('keydown', function (evt) {
@@ -30,7 +30,7 @@
     }
   });
   imgUploadOverlayCloseBtn.addEventListener('click', function () {
-    window.util.elementClose(imgUploadOverlay);
+    window.util.hideElement(imgUploadOverlay);
     onUploaderOverlayClean();
   });
   imgUploadOverlayCloseBtn.addEventListener('keydown', function (evt) {

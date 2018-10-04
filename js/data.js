@@ -59,19 +59,15 @@
     return photoObject;
   };
 
-  var photosData = [];
-
-  var generatePhotosData = function (counter) {
-    for (var i = 1; i <= counter; i++) {
-      photosData.push(createObject(i));
+  var generatePhotosData = function (containerArray) {
+    for (var i = 1; i <= PHOTOS_COUNT; i++) {
+      containerArray.push(createObject(i));
     }
-    return photosData;
+    return containerArray;
   };
-  generatePhotosData(PHOTOS_COUNT);
 
   window.data = {
-    PHOTOS_COUNT: PHOTOS_COUNT,
-    photosData: photosData,
+    generatePhotosData: generatePhotosData,
     generateNumber: generateNumber
   };
 })();

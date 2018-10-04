@@ -4,6 +4,8 @@
   var pictures = document.querySelector('.pictures');
   var pictureTemplate = document.querySelector('#picture').content.querySelector('a.picture');
   var pictureFragment = document.createDocumentFragment();
+  var photosData = [];
+  window.data.generatePhotosData(photosData);
 
   var createPictureElement = function (pictureData) {
     var picture = pictureTemplate.cloneNode(true);
@@ -16,10 +18,10 @@
 
   var fillPicturesContainer = function (counter) {
     for (var i = 0; i < counter; i++) {
-      pictureFragment.appendChild(createPictureElement(window.data.photosData[i]));
+      pictureFragment.appendChild(createPictureElement(photosData[i]));
     }
     pictures.appendChild(pictureFragment);
   };
 
-  fillPicturesContainer(window.data.PHOTOS_COUNT);
+  fillPicturesContainer(photosData.length);
 })();
