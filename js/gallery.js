@@ -4,7 +4,7 @@
   var pictures = document.querySelector('.pictures');
   var pictureTemplate = document.querySelector('#picture').content.querySelector('a.picture');
   var pictureFragment = document.createDocumentFragment();
-  var photosData = window.data.generatePhotosData();
+  var photosData = [];
 
   var createPictureElement = function (pictureData) {
     var picture = pictureTemplate.cloneNode(true);
@@ -15,12 +15,19 @@
     return picture;
   };
 
-  var fillPicturesContainer = function (counter) {
-    for (var i = 0; i < counter; i++) {
-      pictureFragment.appendChild(createPictureElement(photosData[i]));
+  var fillPicturesContainer = function (dataArray) {
+    for (var i = 0; i < dataArray.length; i++) {
+      pictureFragment.appendChild(createPictureElement(dataArray[i]));
     }
     pictures.appendChild(pictureFragment);
   };
 
-  fillPicturesContainer(photosData.length);
+  var onLoad = function (data) {
+    photosData = JSON.parse(data);
+    fillPicturesContainer(photosData);
+  };
+  // var onError = function (error) {
+  //   console.log('чё то произошло непонятное');
+  // };
+  window.download(onLoad);
 })();
