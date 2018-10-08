@@ -2,7 +2,7 @@
 
 (function () {
   var pictures = document.querySelector('.pictures');
-  var pictureTemplate = document.querySelector('#picture').content.querySelector('a.picture');
+  var pictureTemplate = document.querySelector('#picture').content.querySelector('.picture');
   var pictureFragment = document.createDocumentFragment();
   var photosData = [];
 
@@ -26,8 +26,8 @@
     photosData = JSON.parse(data);
     fillPicturesContainer(photosData);
   };
-  // var onError = function (error) {
-  //   console.log('чё то произошло непонятное');
-  // };
-  window.download(onLoad);
+  var onError = function (errorMessage) {
+    document.querySelector('body').appendChild(errorMessage);
+  };
+  window.download(onLoad, onError);
 })();
