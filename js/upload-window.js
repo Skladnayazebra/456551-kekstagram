@@ -7,35 +7,56 @@
   var inputHashtags = document.querySelector('.text__hashtags');
   var inputDescription = document.querySelector('.text__description');
   var form = document.querySelector('.img-upload__form');
-  var successDialogTemplate = document.querySelector('#success').content.querySelector('.success');
-  var successButton = document.querySelector('.success__button')
-  var failDialogTemplate = document.querySelector('#error').content.querySelector('.error');
-  var body = document.querySelector('body');
+  var successDialog = document.querySelector('#success').content.querySelector('.success');
+  var failDialog = document.querySelector('#error').content.querySelector('.error');
+  var main = document.querySelector('main');
 
   var onUploadOverlaySetEffect = function () {
     window.effects.applyEffect(window.effects.EFFECT_LEVEL_DEFAULT);
     document.querySelector('.effect-level__value').value = '';
   };
 
-  var onUploaderOverlayClean = function () {
+  var onUploaderHideClean = function () {
     imgUploadField.value = null;
     window.effects.applyEffect(window.effects.EFFECT_LEVEL_DEFAULT);
     inputHashtags.value = null;
     inputDescription.value = null;
   };
 
+  var showMessage = function (message) {
+    main.appendChild(message);
+  };
+
+  var hideMessage = function (message) {
+    main.removeChild(message);
+  };
+
   var onSuccess = function () {
     window.util.hideElement(imgUploadOverlay);
-    var successMessage = successDialogTemplate.cloneNode(true);
-    body.appendChild(successMessage);
-
-
+    onUploaderHideClean();
+    var successMessage = successDialog.cloneNode(true);
+    showMessage(successMessage);
+    var successButton = document.querySelector('.success__button');
+    successButton.addEventListener('click', function () {
+      hideMessage(successMessage);
+    });
   };
 
   var onFail = function () {
-    var failMessage = failDialogTemplate.cloneNode(true);
-    body.appendChild(failMessage);
+    window.util.hideElement(imgUploadOverlay);
+    onUploaderHideClean();
+    var failMessage = failDialog.cloneNode(true);
+    showMessage(failMessage);
+    var failButtonRestart = document.querySelector('.error__button--restart');
+    failButtonRestart.addEventListener('click', function () {
+      hideMessage(failMessage);
+    });
+    var failButtonAnother = document.querySelector('.error__button--another');
+    failButtonAnother.addEventListener('click', function () {
+      hideMessage(failMessage);
+    });
   };
+  // нарушение принципа DRY. Позже разберусь, как сделать всё коротко и красиво
 
   imgUploadField.addEventListener('change', function () {
     window.util.showElement(imgUploadOverlay);
@@ -44,16 +65,16 @@
   document.addEventListener('keydown', function (evt) {
     if (document.activeElement !== inputHashtags && document.activeElement !== inputDescription) {
       window.util.onEscPressClose(evt, imgUploadOverlay);
-      onUploaderOverlayClean();
+      onUploaderHideClean();
     }
   });
   imgUploadOverlayCloseBtn.addEventListener('click', function () {
     window.util.hideElement(imgUploadOverlay);
-    onUploaderOverlayClean();
+    onUploaderHideClean();
   });
   imgUploadOverlayCloseBtn.addEventListener('keydown', function (evt) {
     window.util.onEnterPressClose(evt, imgUploadOverlay);
-    onUploaderOverlayClean();
+    onUploaderHideClean();
   });
 
   form.addEventListener('submit', function (evt) {
