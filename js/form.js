@@ -5,8 +5,12 @@
   var HASHTAG_SYMBOL_REGEX = /^#/;
   var HASHTAG_LENGTH_REGEX = /^#[0-9A-Za-zА-Яа-яЁё#]{1,19}$/;
   var HASHTAG_WHITESPACE_REGEX = /^#[0-9A-Za-zА-Яа-яЁё]{1,19}$/;
+  var form = document.querySelector('.img-upload__form');
   var inputHashtags = document.querySelector('.text__hashtags');
   var submitButton = document.querySelector('.img-upload__submit');
+  var successDialogTemplate = document.querySelector('#success');
+  var failDialogTemplate = document.querySelector('#error');
+  var body = document.querySelector('body');
 
   var validateHashtags = function () {
     var hashtags = inputHashtags.value
@@ -52,6 +56,21 @@
     }
   };
 
+  var onSuccess = function () {
+    var successMessage = successDialogTemplate.cloneNode(true);
+    body.appendChild(successMessage);
+  };
+
+  var onFail = function () {
+    var failMessage = failDialogTemplate.cloneNode(true);
+    body.appendChild(failMessage);
+  };
+
   submitButton.addEventListener('click', validateHashtags);
+
+  form.addEventListener('submit', function (evt) {
+    evt.preventDefault();
+    window.upload(new FormData(form), onSuccess, onFail);
+  });
 
 })();

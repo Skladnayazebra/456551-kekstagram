@@ -15,7 +15,7 @@
     });
 
     getPhotosData.addEventListener('error', function () {
-      onError(getErrorMessage('ошибка загрузки ленты фотографий'));
+      onError(getErrorMessage);
     });
 
     getPhotosData.open('GET', URL);
@@ -23,6 +23,18 @@
   };
 
   window.upload = function (data, onLoad, onError) {
-    var URL
+    var URL = 'https://js.dump.academy/kekstagram';
+    var sendFormData = new XMLHttpRequest();
+
+    sendFormData.addEventListener('load', function () {
+      onLoad();
+    });
+
+    sendFormData.addEventListener('error', function () {
+      onError();
+    });
+
+    sendFormData.open('POST', URL);
+    sendFormData.send(data);
   };
 })();
