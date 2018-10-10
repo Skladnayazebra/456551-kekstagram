@@ -11,7 +11,7 @@
   // добавление одного комментария в блок просмотра фотографии
   var addComment = function (arrayElement) {
     var newComment = commentTemplate.cloneNode(true);
-    var avatarUrl = 'img/avatar-' + window.data.generateNumber(1, AVATAR_VARIANTS) + '.svg';
+    var avatarUrl = 'img/avatar-' + window.util.generateNumber(1, AVATAR_VARIANTS) + '.svg';
     newComment.querySelector('.social__picture').setAttribute('src', avatarUrl);
     newComment.querySelector('.social__text').textContent = arrayElement;
     return newComment;
