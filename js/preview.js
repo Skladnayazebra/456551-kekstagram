@@ -37,7 +37,7 @@
     if (evt.target.closest('.picture')) {
       var photosData = window.photosData;
       for (var i = 1; i <= photosData.length; i++) {
-        if (evt.target.src.indexOf('/' + String(i) + '.jpg') >= 0) {
+        if (evt.target.src.indexOf(i + '.jpg') >= 0) {
           renderBigPicture(photosData[i - 1]);
         }
       }
