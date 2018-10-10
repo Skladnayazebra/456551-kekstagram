@@ -25,9 +25,11 @@
   var onLoad = function (data) {
     photosData = JSON.parse(data);
     fillPicturesContainer(photosData);
+    window.photosData = photosData;
   };
   var onError = function (errorMessage) {
     document.querySelector('body').appendChild(errorMessage);
   };
   window.download(onLoad, onError);
+
 })();
