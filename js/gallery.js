@@ -16,7 +16,7 @@
     picture.setAttribute('data-id', pictureData.id);
     return picture;
   };
-
+  // метод forEach() умеет перебирать массив
   var fillPicturesContainer = function (dataArray) {
     for (var i = 0; i < dataArray.length; i++) {
       pictureFragment.appendChild(createPictureElement(dataArray[i]));
@@ -32,6 +32,7 @@
   var onLoad = function (data) {
     photosData = JSON.parse(data);
     fillPicturesContainer(photosData);
+    document.querySelector('.img-filters').classList.remove('img-filters--inactive');
     window.photosData = photosData;
   };
   var onError = function () {
@@ -41,5 +42,4 @@
     showMessage(errorMessage);
   };
   window.download(onLoad, onError);
-
 })();
