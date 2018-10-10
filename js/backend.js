@@ -1,11 +1,5 @@
 'use strict';
 (function () {
-  var errorTemplate = document.querySelector('#error').content.querySelector('.error');
-  var getErrorMessage = function (messageText) {
-    var message = errorTemplate.cloneNode(true);
-    message.querySelector('.error__title').textContent = messageText;
-    return message;
-  };
   window.download = function (onLoad, onError) {
     var URL = 'https://js.dump.academy/kekstagram/data';
     var getPhotosData = new XMLHttpRequest();
@@ -15,7 +9,7 @@
     });
 
     getPhotosData.addEventListener('error', function () {
-      onError(getErrorMessage);
+      onError();
     });
 
     getPhotosData.open('GET', URL);
