@@ -3,7 +3,7 @@
 (function () {
   var pictures = document.querySelector('.pictures');
   var pictureTemplate = document.querySelector('#picture').content.querySelector('.picture');
-  var pictureFragment = document.createDocumentFragment();
+
   var errorDialog = document.querySelector('#error').content.querySelector('.error');
   var main = document.querySelector('main');
   var photosData = [];
@@ -16,22 +16,30 @@
     picture.setAttribute('data-id', pictureData.id);
     return picture;
   };
-  // метод forEach() умеет перебирать массив
+
   var fillPicturesContainer = function (dataArray) {
-    for (var i = 0; i < dataArray.length; i++) {
-      pictureFragment.appendChild(createPictureElement(dataArray[i]));
-    }
+    var pictureFragment = document.createDocumentFragment();
+    dataArray.forEach(function (element) {
+      pictureFragment.appendChild(createPictureElement(element));
+    });
     pictures.appendChild(pictureFragment);
+  };
+
+  var refreshPicturesContainer = function (dataArray) {
+    while (pictures.lastChild.className === 'picture') {
+      pictures.removeChild(pictures.lastChild);
+    }
+    fillPicturesContainer(dataArray);
   };
 
   var showMessage = function (message) {
     main.appendChild(message);
   };
 
-
   var onLoad = function (data) {
     photosData = JSON.parse(data);
     fillPicturesContainer(photosData);
+    refreshPicturesContainer(photosData);
     document.querySelector('.img-filters').classList.remove('img-filters--inactive');
     window.photosData = photosData;
   };
