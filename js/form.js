@@ -53,5 +53,4 @@
   };
 
   submitButton.addEventListener('click', validateHashtags);
-
 })();

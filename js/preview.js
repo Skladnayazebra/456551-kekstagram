@@ -7,8 +7,6 @@
   var bigPictureCloseBtn = document.querySelector('.big-picture__cancel');
   var commentTemplate = document.querySelector('#social-comment').content.querySelector('li.social__comment');
   var commentsFragment = document.createDocumentFragment();
-  var photosData = [];
-  window.data.generatePhotosData(photosData);
 
   // добавление одного комментария в блок просмотра фотографии
   var addComment = function (arrayElement) {
@@ -37,8 +35,9 @@
 
   var onPictureClick = function (evt) {
     if (evt.target.closest('.picture')) {
+      var photosData = window.photosData;
       for (var i = 1; i <= photosData.length; i++) {
-        if (+evt.target.closest('.picture').dataset.id === i) {
+        if (evt.target.src.indexOf('/' + String(i) + '.jpg') >= 0) {
           renderBigPicture(photosData[i - 1]);
         }
       }
