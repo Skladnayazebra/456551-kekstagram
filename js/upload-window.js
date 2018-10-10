@@ -37,9 +37,11 @@
     var successMessage = successDialog.cloneNode(true);
     showMessage(successMessage);
     var successButton = document.querySelector('.success__button');
-    successButton.addEventListener('click', function () {
+    var onSuccessButtonClick = function () {
       hideMessage(successMessage);
-    });
+      successButton.removeEventListener('click', onSuccessButtonClick);
+    };
+    successButton.addEventListener('click', onSuccessButtonClick);
   };
 
   var onFail = function () {
@@ -48,13 +50,18 @@
     var failMessage = failDialog.cloneNode(true);
     showMessage(failMessage);
     var failButtonRestart = document.querySelector('.error__button--restart');
-    failButtonRestart.addEventListener('click', function () {
+    var onButtonRestartClick = function () {
       hideMessage(failMessage);
-    });
+      failButtonRestart.removeEventListener('click', onButtonRestartClick);
+    };
+    failButtonRestart.addEventListener('click', onButtonRestartClick);
     var failButtonAnother = document.querySelector('.error__button--another');
-    failButtonAnother.addEventListener('click', function () {
+    var onButtonAnotherClick = function () {
       hideMessage(failMessage);
-    });
+      window.util.hideElement(imgUploadOverlay);
+      failButtonAnother.removeEventListener('click', onButtonAnotherClick);
+    };
+    failButtonAnother.addEventListener('click', onButtonAnotherClick);
   };
   // нарушение принципа DRY. Позже разберусь, как сделать всё коротко и красиво
 
