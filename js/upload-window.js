@@ -44,6 +44,7 @@
     successButton.addEventListener('click', onSuccessButtonClick);
   };
 
+  // нужно дополнительно подумать над поведением при нажатии разных кпопок на уведомлениях
   var onFail = function () {
     window.util.hideElement(imgUploadOverlay);
     onUploaderHideClean();
