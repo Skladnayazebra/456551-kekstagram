@@ -3,6 +3,7 @@
 (function () {
   var ESC_KEYCODE = 27;
   var ENTER_KEYCODE = 13;
+  var DEBOUNCE_INTERVAL = 200; // ms
 
   var generateNumber = function (min, max) {
     var number;
@@ -30,12 +31,26 @@
     }
   };
 
+  var debounce = function (fun) {
+    var lastTimeout = null;
+    return function () {
+      var args = arguments;
+      if (lastTimeout) {
+        window.clearTimeout(lastTimeout);
+      }
+      lastTimeout = window.setTimeout(function () {
+        fun.apply(null, args);
+      }, DEBOUNCE_INTERVAL);
+    };
+  };
+
   window.util = {
     generateNumber: generateNumber,
     showElement: showElement,
     hideElement: hideElement,
     onEnterPressClose: onEnterPressClose,
-    onEscPressClose: onEscPressClose
+    onEscPressClose: onEscPressClose,
+    debounce: debounce
   };
 
 })();
