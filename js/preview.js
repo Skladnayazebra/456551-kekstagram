@@ -11,7 +11,7 @@
   // добавление одного комментария в блок просмотра фотографии
   var addComment = function (arrayElement) {
     var newComment = commentTemplate.cloneNode(true);
-    var avatarUrl = 'img/avatar-' + window.data.generateNumber(1, AVATAR_VARIANTS) + '.svg';
+    var avatarUrl = 'img/avatar-' + window.util.generateNumber(1, AVATAR_VARIANTS) + '.svg';
     newComment.querySelector('.social__picture').setAttribute('src', avatarUrl);
     newComment.querySelector('.social__text').textContent = arrayElement;
     return newComment;
@@ -37,7 +37,7 @@
     if (evt.target.closest('.picture')) {
       var photosData = window.photosData;
       for (var i = 1; i <= photosData.length; i++) {
-        if (evt.target.src.indexOf('/' + String(i) + '.jpg') >= 0) {
+        if (evt.target.src.indexOf(i + '.jpg') >= 0) {
           renderBigPicture(photosData[i - 1]);
         }
       }
