@@ -65,21 +65,16 @@
   };
 
   var sortNewPhotos = function (data) {
-    return data.slice(0).sort(function () {
-      return Math.random() < 0.5 ? 1 : -1;
-    })
+    return data.slice(0)
+      .sort(function () {
+        return Math.random() < 0.5 ? 1 : -1;
+      })
       .slice(0, (NEW_PHOTOS_COUNT));
   };
 
   var sortDiscussedPhotos = function (data) {
     return data.slice(0).sort(function (a, b) {
-      if (a.comments.length < b.comments.length) {
-        return 1;
-      } else if (a.comments.length > b.comments.length) {
-        return -1;
-      } else {
-        return 0;
-      }
+      return b.comments.length - a.comments.length;
     });
   };
 
