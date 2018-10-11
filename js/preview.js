@@ -28,8 +28,6 @@
       commentsFragment.appendChild(addComment(arrayElement.comments[i]));
     }
     bigPicture.querySelector('.social__comments').appendChild(commentsFragment);
-    bigPicture.querySelector('.social__comment-count').classList.add('visually-hidden');
-    bigPicture.querySelector('.comments-loader').classList.add('visually-hidden');
     return bigPicture;
   };
 
