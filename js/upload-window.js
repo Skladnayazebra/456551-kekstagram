@@ -1,9 +1,12 @@
 'use strict';
 
 (function () {
+  var imgPreview = document.querySelector('.img-upload__preview img');
   var imgUploadField = document.querySelector('#upload-file');
   var imgUploadOverlay = document.querySelector('.img-upload__overlay');
   var imgUploadOverlayCloseBtn = document.querySelector('.img-upload__cancel');
+  var scaleControlField = document.querySelector('.scale__control--value');
+  var effectNone = document.querySelector('#effect-none');
   var inputHashtags = document.querySelector('.text__hashtags');
   var inputDescription = document.querySelector('.text__description');
   var form = document.querySelector('.img-upload__form');
@@ -17,7 +20,10 @@
 
   var onUploaderHideClean = function () {
     imgUploadField.value = null;
-    window.effects.applyEffect(window.effects.EFFECT_LEVEL_DEFAULT);
+    effectNone.checked = 'true';
+    imgPreview.className = '';
+    scaleControlField.value = window.effects.SCALE_DEFAULT + '%';
+    imgPreview.style.transform = 'scale(' + (window.effects.SCALE_DEFAULT) / 100 + ')';
     inputHashtags.value = null;
     inputDescription.value = null;
   };

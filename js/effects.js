@@ -11,7 +11,6 @@
   var SCALE_DEFAULT = 100;
 
   var imgPreview = document.querySelector('.img-upload__preview img');
-
   var scaleControlSmaller = document.querySelector('.scale__control--smaller');
   var scaleControlBigger = document.querySelector('.scale__control--bigger');
   var scaleControlField = document.querySelector('.scale__control--value');
@@ -62,7 +61,6 @@
   var applyEffect = function (effectLevel) {
     switch (document.querySelector('.effects__radio:checked').id) {
       case 'effect-none' :
-        imgPreview.className = '';
         effectLevelField.classList.add('hidden');
         document.querySelector('.effect-level__value').value = '';
         break;
@@ -140,6 +138,7 @@
 
   window.effects = {
     EFFECT_LEVEL_DEFAULT: EFFECT_LEVEL_DEFAULT,
+    SCALE_DEFAULT: SCALE_DEFAULT,
     applyEffect: applyEffect
   };
 })();
