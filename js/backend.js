@@ -1,15 +1,18 @@
 'use strict';
 (function () {
+  var Status = {
+    OK: 200
+  };
   window.download = function (onLoad, onError) {
     var URL = 'https://js.dump.academy/kekstagram/data';
     var getPhotosData = new XMLHttpRequest();
 
     getPhotosData.addEventListener('load', function () {
-      onLoad(getPhotosData.response);
-    });
-
-    getPhotosData.addEventListener('error', function () {
-      onError();
+      if (getPhotosData.status === Status.OK) {
+        onLoad(getPhotosData.response);
+      } else {
+        onError('Всё сломалось. Зайдите позже');
+      }
     });
 
     getPhotosData.open('GET', URL);
@@ -21,11 +24,11 @@
     var sendFormData = new XMLHttpRequest();
 
     sendFormData.addEventListener('load', function () {
-      onLoad();
-    });
-
-    sendFormData.addEventListener('error', function () {
-      onError();
+      if (sendFormData.status === Status.OK) {
+        onLoad('Изображение успешно загружено');
+      } else {
+        onError('Ошибка загрузки файла');
+      }
     });
 
     sendFormData.open('POST', URL);

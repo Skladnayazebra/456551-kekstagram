@@ -32,7 +32,7 @@
   var applyEffect = function (effectLevel) {
     switch (document.querySelector('.effects__radio:checked').id) {
       case 'effect-none' :
-        imgPreview.style.filter = '';
+        imgPreview.className = '';
         effectLevelField.classList.add('hidden');
         document.querySelector('.effect-level__value').value = '';
         break;
