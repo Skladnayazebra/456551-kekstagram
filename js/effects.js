@@ -5,7 +5,36 @@
   // 1) сделать единую функцию для применения эффекта,
   // 2) вместо отдельных обработчков использовать общий с делегированием.
   var EFFECT_LEVEL_DEFAULT = 100;
+  var SCALE_MAX = 100;
+  var SCALE_MIN = 25;
+  var SCALE_STEP = 25;
+  var SCALE_DEFAULT = 100;
+
   var imgPreview = document.querySelector('.img-upload__preview img');
+  var scaleControlSmaller = document.querySelector('.scale__control--smaller');
+  var scaleControlBigger = document.querySelector('.scale__control--bigger');
+  var scaleControlField = document.querySelector('.scale__control--value');
+
+  var currentScale = SCALE_DEFAULT;
+
+  var decreaseSize = function () {
+    if (currentScale > SCALE_MIN) {
+      scaleControlField.value = (currentScale - SCALE_STEP) + '%';
+      imgPreview.style.transform = 'scale(' + (currentScale - SCALE_STEP) / 100 + ')';
+      currentScale -= SCALE_STEP;
+    }
+  };
+
+  var increaseSize = function () {
+    if (currentScale < SCALE_MAX) {
+      scaleControlField.value = (currentScale + SCALE_STEP) + '%';
+      imgPreview.style.transform = 'scale(' + (currentScale + SCALE_STEP) / 100 + ')';
+      currentScale += SCALE_STEP;
+    }
+  };
+
+  scaleControlSmaller.addEventListener('click', decreaseSize);
+  scaleControlBigger.addEventListener('click', increaseSize);
 
   var effectLevelLine = document.querySelector('.effect-level__line');
   var effectLevelField = document.querySelector('.img-upload__effect-level');
@@ -32,7 +61,6 @@
   var applyEffect = function (effectLevel) {
     switch (document.querySelector('.effects__radio:checked').id) {
       case 'effect-none' :
-        imgPreview.style.filter = '';
         effectLevelField.classList.add('hidden');
         document.querySelector('.effect-level__value').value = '';
         break;
@@ -53,19 +81,6 @@
         break;
     }
   };
-  /*
-  можно попробовать вот такую модификацию:
-
-  var styles = {
-   'effect-none': '',
-   'effect-chrome': 'grayscale(' + effectLevel / 100 + ')',
-   'effect-sepia': 'sepia(' + effectLevel / 100 + ')',
-   ...
-  }
-
-  var effectName = document.querySelector('.effects__radio:checked').id;
-  imgPreview.style.filter = styles[effectName];
-  */
 
   effectNone.addEventListener('click', function () {
     switchEffect('effects__preview--none');
@@ -123,6 +138,7 @@
 
   window.effects = {
     EFFECT_LEVEL_DEFAULT: EFFECT_LEVEL_DEFAULT,
+    SCALE_DEFAULT: SCALE_DEFAULT,
     applyEffect: applyEffect
   };
 })();

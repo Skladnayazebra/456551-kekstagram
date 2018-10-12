@@ -5,7 +5,7 @@
   var pictures = document.querySelector('.pictures');
   var pictureTemplate = document.querySelector('#picture').content.querySelector('.picture');
 
-  var errorDialog = document.querySelector('#error').content.querySelector('.error');
+  var errorDialogTemplate = document.querySelector('#error').content.querySelector('.error');
   var main = document.querySelector('main');
   var photosData = [];
 
@@ -14,7 +14,6 @@
     picture.querySelector('.picture__img').setAttribute('src', pictureData.url);
     picture.querySelector('.picture__likes').textContent = pictureData.likes;
     picture.querySelector('.picture__comments').textContent = String(pictureData.comments.length);
-    picture.setAttribute('data-id', pictureData.id);
     return picture;
   };
 
@@ -35,8 +34,8 @@
 
   var refreshPicsDebounced = window.util.debounce(refreshPics);
 
-  var showMessage = function (message) {
-    main.appendChild(message);
+  var showDialog = function (dialog) {
+    main.appendChild(dialog);
   };
 
   var onLoad = function (data) {
@@ -45,11 +44,11 @@
     document.querySelector('.img-filters').classList.remove('img-filters--inactive');
     window.photosData = photosData;
   };
-  var onError = function () {
-    var errorMessage = errorDialog.cloneNode(true);
-    errorMessage.querySelector('.error__title').textContent = 'Всё сломалось. Зайдите позже';
-    errorMessage.querySelector('.error__buttons').remove();
-    showMessage(errorMessage);
+  var onError = function (message) {
+    var errorDialog = errorDialogTemplate.cloneNode(true);
+    errorDialog.querySelector('.error__title').textContent = message;
+    errorDialog.querySelector('.error__buttons').remove();
+    showDialog(errorDialog);
   };
   window.download(onLoad, onError);
 
