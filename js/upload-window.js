@@ -25,9 +25,11 @@
   var onSuccess = function (message) {
     window.util.hideElement(imgUploadOverlay);
     onUploaderHideClean();
+
     var successDialog = successDialogTemplate.cloneNode(true);
     successDialog.querySelector('.success__title').textContent = message;
     window.util.showDialog(successDialog);
+
     var successButton = document.querySelector('.success__button');
     var onSuccessButtonClick = function () {
       window.util.hideDialog(successDialog);
@@ -40,15 +42,18 @@
   var onFail = function (message) {
     window.util.hideElement(imgUploadOverlay);
     onUploaderHideClean();
+
     var failDialog = failDialogTemplate.cloneNode(true);
     failDialog.querySelector('.error__title').textContent = message;
     window.util.showDialog(failDialog);
+
     var failButtonRestart = document.querySelector('.error__button--restart');
     var onButtonRestartClick = function () {
       window.util.hideDialog(failDialog);
       failButtonRestart.removeEventListener('click', onButtonRestartClick);
     };
     failButtonRestart.addEventListener('click', onButtonRestartClick);
+
     var failButtonAnother = document.querySelector('.error__button--another');
     var onButtonAnotherClick = function () {
       window.util.hideDialog(failDialog);

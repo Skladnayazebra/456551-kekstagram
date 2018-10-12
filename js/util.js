@@ -3,7 +3,7 @@
 (function () {
   var ESC_KEYCODE = 27;
   var ENTER_KEYCODE = 13;
-  var DEBOUNCE_INTERVAL = 200; // ms
+  var DEBOUNCE_INTERVAL = 500; // ms
   var main = document.querySelector('main');
 
   var generateNumber = function (min, max) {
@@ -73,7 +73,7 @@
 - Не сбрасывается фильтр и размер изображения при закрытии окна
 - Если нажать на Enter будучи на фотографии в галерее - она не откроется, и в консоль упадет эксепшн
 - Добиться чтобы на всех интерактивных элементах работал Enter
-- Дебаунс нужно не меньше 500 по ТЗ
+СДЕЛАНО - Дебаунс нужно не меньше 500 по ТЗ
 
 1. effects.js строка 106.
 effectLevelValue - лучше заменить на промежуточную переменную, а не мутировать переменную из замыкания
