@@ -1,6 +1,7 @@
 'use strict';
 
 (function () {
+
   var imgPreview = document.querySelector('.img-upload__preview img');
   var imgUploadField = document.querySelector('#upload-file');
   var imgUploadOverlay = document.querySelector('.img-upload__overlay');
@@ -22,6 +23,7 @@
     imgUploadField.value = null;
     effectNone.checked = 'true';
     imgPreview.className = '';
+    imgPreview.style.filter = '';
     scaleControlField.value = window.effects.SCALE_DEFAULT + '%';
     imgPreview.style.transform = 'scale(' + (window.effects.SCALE_DEFAULT) / 100 + ')';
     inputHashtags.value = null;
@@ -96,7 +98,9 @@
   var onUploaderEscPress = function (evt) {
     if (document.activeElement !== inputHashtags && document.activeElement !== inputDescription) {
       window.util.onEscPressClose(evt, imgUploadOverlay);
-      onUploaderHideClean();
+      if (evt.keyCode === window.util.ESC_KEYCODE) {
+        onUploaderHideClean();
+      }
     }
   };
 
