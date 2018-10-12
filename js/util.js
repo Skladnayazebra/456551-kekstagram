@@ -53,6 +53,7 @@
   };
 
   window.util = {
+    ESC_KEYCODE: ESC_KEYCODE,
     generateNumber: generateNumber,
     showElement: showElement,
     hideElement: hideElement,
