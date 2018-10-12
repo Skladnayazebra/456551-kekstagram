@@ -38,7 +38,6 @@
     successButton.addEventListener('click', onSuccessButtonClick);
   };
 
-  // нужно дополнительно подумать над поведением при нажатии разных кпопок на уведомлениях
   var onFail = function (message) {
     window.util.hideElement(imgUploadOverlay);
     onUploaderHideClean();
@@ -62,25 +61,24 @@
     };
     failButtonAnother.addEventListener('click', onButtonAnotherClick);
   };
-  // нарушение принципа DRY. Позже разберусь, как сделать всё коротко и красиво
+  // Позже разберусь, как сделать всё коротко и красиво
+
+  var onUploaderEscPress = function (evt) {
+    if (document.activeElement !== inputHashtags && document.activeElement !== inputDescription) {
+      window.util.onEscPressClose(evt, imgUploadOverlay);
+      onUploaderHideClean();
+    }
+  };
 
   imgUploadField.addEventListener('change', function () {
     window.util.showElement(imgUploadOverlay);
     onUploadOverlaySetEffect();
   });
-  document.addEventListener('keydown', function (evt) {
-    if (document.activeElement !== inputHashtags && document.activeElement !== inputDescription) {
-      window.util.onEscPressClose(evt, imgUploadOverlay);
-      onUploaderHideClean();
-    }
-  });
+
+  document.addEventListener('keydown', onUploaderEscPress);
+
   imgUploadOverlayCloseBtn.addEventListener('click', function () {
     window.util.hideElement(imgUploadOverlay);
-    onUploaderHideClean();
-  });
-  imgUploadOverlayCloseBtn.addEventListener('keydown', function (evt) {
-    evt.stopPropagation();
-    window.util.onEnterPressClose(evt, imgUploadOverlay);
     onUploaderHideClean();
   });
 

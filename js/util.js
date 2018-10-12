@@ -2,7 +2,6 @@
 
 (function () {
   var ESC_KEYCODE = 27;
-  var ENTER_KEYCODE = 13;
   var DEBOUNCE_INTERVAL = 500; // ms
   var main = document.querySelector('main');
 
@@ -26,12 +25,6 @@
 
   var hideDialog = function (dialog) {
     main.removeChild(dialog);
-  };
-
-  var onEnterPressClose = function (evt, element) {
-    if (evt.keyCode === ENTER_KEYCODE) {
-      hideElement(element);
-    }
   };
 
   var onEscPressClose = function (evt, element) {
@@ -59,7 +52,6 @@
     hideElement: hideElement,
     showDialog: showDialog,
     hideDialog: hideDialog,
-    onEnterPressClose: onEnterPressClose,
     onEscPressClose: onEscPressClose,
     debounce: debounce
   };
@@ -72,7 +64,7 @@
 СДЕЛАНО - По ТЗ комментариев должно быть отображено не более 5 для изображения. (вероятно еще надо отобразить кнопку "Показать больше" или как там она называется)
 - Не сбрасывается фильтр и размер изображения при закрытии окна
 СДЕЛАНО - Если нажать на Enter будучи на фотографии в галерее - она не откроется, и в консоль упадет эксепшн
-- Добиться чтобы на всех интерактивных элементах работал Enter
+СДЕЛАНО - Добиться чтобы на всех интерактивных элементах работал Enter
 - Сообщение об ошибке должно исчезать после нажатия на кнопки .error__button, по нажатию на клавишу Esc и по клику на произвольную область экрана.
 СДЕЛАНО - Дебаунс нужно не меньше 500 по ТЗ
 

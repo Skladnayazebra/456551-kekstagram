@@ -8,6 +8,7 @@
   var bigPictureCloseBtn = document.querySelector('.big-picture__cancel');
   var commentTemplate = document.querySelector('#social-comment').content.querySelector('li.social__comment');
   var commentsFragment = document.createDocumentFragment();
+  var newCommentInput = document.querySelector('.social__footer-text');
 
   // добавление одного комментария в блок просмотра фотографии
   var addComment = function (arrayElement) {
@@ -45,19 +46,20 @@
         }
       }
       window.util.showElement(bigPicture);
-      picturesContainer.removeEventListener('click', onPictureClick);
+      newCommentInput.focus();
+      document.addEventListener('keydown', onBigPictureEscPress);
     }
   };
 
   picturesContainer.addEventListener('click', onPictureClick);
 
-  document.addEventListener('keydown', function (evt) {
-    picturesContainer.addEventListener('click', onPictureClick);
+  var onBigPictureEscPress = function (evt) {
     window.util.onEscPressClose(evt, bigPicture);
-  });
+    document.removeEventListener('keydown', onBigPictureEscPress);
+  };
 
   bigPictureCloseBtn.addEventListener('click', function () {
-    picturesContainer.addEventListener('click', onPictureClick);
     window.util.hideElement(bigPicture);
+    document.removeEventListener('keydown', onBigPictureEscPress);
   });
 })();
