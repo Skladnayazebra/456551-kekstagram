@@ -73,18 +73,19 @@
   imgUploadField.addEventListener('change', function () {
     window.util.showElement(imgUploadOverlay);
     onUploadOverlaySetEffect();
+    document.addEventListener('keydown', onUploaderEscPress);
   });
-
-  document.addEventListener('keydown', onUploaderEscPress);
 
   imgUploadOverlayCloseBtn.addEventListener('click', function () {
     window.util.hideElement(imgUploadOverlay);
     onUploaderHideClean();
+    document.removeEventListener('keydown', onUploaderEscPress);
   });
 
   form.addEventListener('submit', function (evt) {
     window.upload(new FormData(form), onSuccess, onFail);
     evt.preventDefault();
+    document.removeEventListener('keydown', onUploaderEscPress);
   });
 
 })();
