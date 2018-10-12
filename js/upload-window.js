@@ -36,6 +36,18 @@
       successButton.removeEventListener('click', onSuccessButtonClick);
     };
     successButton.addEventListener('click', onSuccessButtonClick);
+
+    var onSuccessDialogEscPress = function (evt) {
+      window.util.onEscPressCloseDialog(evt, successDialog);
+      document.removeEventListener('keydown', onSuccessDialogEscPress);
+    };
+    document.addEventListener('keydown', onSuccessDialogEscPress);
+
+    var onScreenClick = function () {
+      window.util.hideDialog(successDialog);
+      document.removeEventListener('click', onScreenClick);
+    };
+    document.addEventListener('click', onScreenClick);
   };
 
   var onFail = function (message) {
@@ -60,6 +72,18 @@
       failButtonAnother.removeEventListener('click', onButtonAnotherClick);
     };
     failButtonAnother.addEventListener('click', onButtonAnotherClick);
+
+    var onFailDialogEscPress = function (evt) {
+      window.util.onEscPressCloseDialog(evt, failDialog);
+      document.removeEventListener('keydown', onFailDialogEscPress);
+    };
+    document.addEventListener('keydown', onFailDialogEscPress);
+
+    var onScreenClick = function () {
+      window.util.hideDialog(failDialog);
+      document.removeEventListener('click', onScreenClick);
+    };
+    document.addEventListener('click', onScreenClick);
   };
   // Позже разберусь, как сделать всё коротко и красиво
 

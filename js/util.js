@@ -33,6 +33,12 @@
     }
   };
 
+  var onEscPressCloseDialog = function (evt, dialog) {
+    if (evt.keyCode === ESC_KEYCODE) {
+      hideDialog(dialog);
+    }
+  };
+
   var debounce = function (fun) {
     var lastTimeout = null;
     return function () {
@@ -53,6 +59,7 @@
     showDialog: showDialog,
     hideDialog: hideDialog,
     onEscPressClose: onEscPressClose,
+    onEscPressCloseDialog: onEscPressCloseDialog,
     debounce: debounce
   };
 
@@ -65,7 +72,7 @@
 - Не сбрасывается фильтр и размер изображения при закрытии окна
 СДЕЛАНО - Если нажать на Enter будучи на фотографии в галерее - она не откроется, и в консоль упадет эксепшн
 СДЕЛАНО - Добиться чтобы на всех интерактивных элементах работал Enter
-- Сообщение об ошибке должно исчезать после нажатия на кнопки .error__button, по нажатию на клавишу Esc и по клику на произвольную область экрана.
+СДЕЛАНО - Сообщение об ошибке должно исчезать после нажатия на кнопки .error__button, по нажатию на клавишу Esc и по клику на произвольную область экрана.
 СДЕЛАНО - Дебаунс нужно не меньше 500 по ТЗ
 
 - effects.js строка 106.
