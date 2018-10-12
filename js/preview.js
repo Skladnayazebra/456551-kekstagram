@@ -38,22 +38,26 @@
   var onPictureClick = function (evt) {
     if (evt.target.closest('.picture')) {
       var photosData = window.photosData;
+      var trg = evt.target.querySelector('img') || evt.target;
       for (var i = 1; i <= photosData.length; i++) {
-        if (evt.target.src.indexOf(i + '.jpg') >= 0) {
+        if (trg.src.indexOf(i + '.jpg') >= 0) {
           renderBigPicture(photosData[i - 1]);
         }
       }
       window.util.showElement(bigPicture);
+      picturesContainer.removeEventListener('click', onPictureClick);
     }
   };
 
   picturesContainer.addEventListener('click', onPictureClick);
 
   document.addEventListener('keydown', function (evt) {
+    picturesContainer.addEventListener('click', onPictureClick);
     window.util.onEscPressClose(evt, bigPicture);
   });
 
   bigPictureCloseBtn.addEventListener('click', function () {
+    picturesContainer.addEventListener('click', onPictureClick);
     window.util.hideElement(bigPicture);
   });
 })();

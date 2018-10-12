@@ -53,19 +53,6 @@
         break;
     }
   };
-  /*
-  можно попробовать вот такую модификацию:
-
-  var styles = {
-   'effect-none': '',
-   'effect-chrome': 'grayscale(' + effectLevel / 100 + ')',
-   'effect-sepia': 'sepia(' + effectLevel / 100 + ')',
-   ...
-  }
-
-  var effectName = document.querySelector('.effects__radio:checked').id;
-  imgPreview.style.filter = styles[effectName];
-  */
 
   effectNone.addEventListener('click', function () {
     switchEffect('effects__preview--none');

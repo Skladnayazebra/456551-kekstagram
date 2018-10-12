@@ -79,6 +79,7 @@
     onUploaderHideClean();
   });
   imgUploadOverlayCloseBtn.addEventListener('keydown', function (evt) {
+    evt.stopPropagation();
     window.util.onEnterPressClose(evt, imgUploadOverlay);
     onUploaderHideClean();
   });
