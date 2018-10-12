@@ -2,6 +2,7 @@
 
 (function () {
   var AVATAR_VARIANTS = 6;
+  var COMMENTS_APPEARED = 5;
   var picturesContainer = document.querySelector('.pictures');
   var bigPicture = document.querySelector('.big-picture');
   var bigPictureCloseBtn = document.querySelector('.big-picture__cancel');
@@ -23,11 +24,14 @@
     bigPicture.querySelector('.big-picture__social .likes-count').textContent = arrayElement.likes;
     bigPicture.querySelector('.big-picture__social .comments-count').textContent = String(arrayElement.comments.length);
     bigPicture.querySelector('.big-picture__social .social__caption').textContent = arrayElement.description;
-    var commentsNumber = arrayElement.comments.length;
-    for (var i = 0; i < commentsNumber; i++) {
-      commentsFragment.appendChild(addComment(arrayElement.comments[i]));
+    for (var i = 0; i < COMMENTS_APPEARED; i++) {
+      if (i < arrayElement.comments.length) {
+        commentsFragment.appendChild(addComment(arrayElement.comments[i]));
+        bigPicture.querySelector('.comments-loaded').textContent = String(i + 1);
+      }
     }
     bigPicture.querySelector('.social__comments').appendChild(commentsFragment);
+    bigPicture.querySelector('.comments-loader').classList.add('hidden');
     return bigPicture;
   };
 
