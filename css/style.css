@@ -457,12 +457,12 @@ main {
   border: 0;
 }
 
-.scale__control:hover,
-.scale__control:focus {
+.scale__control:not(.scale__control--value):hover,
+.scale__control:not(.scale__control--value):focus {
   background-color: rgba(255, 255, 255, 0.5);
 }
 
-.scale__control:active {
+.scale__control:not(.scale__control--value):active {
   -webkit-transform: translateY(1px);
       -ms-transform: translateY(1px);
           transform: translateY(1px);
