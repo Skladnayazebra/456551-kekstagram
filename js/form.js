@@ -9,6 +9,7 @@
   var submitButton = document.querySelector('.img-upload__submit');
 
   var validateHashtags = function () {
+    inputHashtags.removeEventListener('keydown', setValidity);
     var hashtags = inputHashtags.value
       .toLowerCase()
       .split(' ')
@@ -47,9 +48,13 @@
     }
     if (!inputHashtags.reportValidity()) {
       inputHashtags.style.border = '2px solid #f44242';
-    } else {
-      inputHashtags.style.border = '';
+      inputHashtags.addEventListener('keydown', setValidity);
     }
+
+  };
+  var setValidity = function () {
+    inputHashtags.setCustomValidity('');
+    inputHashtags.style.border = '';
   };
 
   submitButton.addEventListener('click', validateHashtags);
