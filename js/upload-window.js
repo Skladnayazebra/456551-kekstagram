@@ -117,7 +117,7 @@
   });
 
   form.addEventListener('submit', function (evt) {
-    window.upload(new FormData(form), onSuccess, onFail);
+    window.backend.upload(new FormData(form), onSuccess, onFail);
     evt.preventDefault();
     document.removeEventListener('keydown', onUploaderEscPress);
   });

@@ -50,7 +50,7 @@
     errorDialog.querySelector('.error__buttons').remove();
     showDialog(errorDialog);
   };
-  window.download(onLoad, onError);
+  window.backend.download(onLoad, onError);
 
   var filterPopularButton = document.querySelector('#filter-popular');
   var filterNewButton = document.querySelector('#filter-new');

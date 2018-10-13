@@ -25,11 +25,9 @@
     bigPicture.querySelector('.big-picture__social .likes-count').textContent = arrayElement.likes;
     bigPicture.querySelector('.big-picture__social .comments-count').textContent = String(arrayElement.comments.length);
     bigPicture.querySelector('.big-picture__social .social__caption').textContent = arrayElement.description;
-    for (var i = 0; i < COMMENTS_APPEARED; i++) {
-      if (i < arrayElement.comments.length) {
-        commentsFragment.appendChild(addComment(arrayElement.comments[i]));
-        bigPicture.querySelector('.comments-loaded').textContent = String(i + 1);
-      }
+    for (var i = 0; i < arrayElement.comments.slice(0, COMMENTS_APPEARED).length; i++) {
+      commentsFragment.appendChild(addComment(arrayElement.comments[i]));
+      bigPicture.querySelector('.comments-loaded').textContent = String(i + 1);
     }
     bigPicture.querySelector('.social__comments').appendChild(commentsFragment);
     bigPicture.querySelector('.comments-loader').classList.add('hidden');

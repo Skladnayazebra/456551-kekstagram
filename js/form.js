@@ -2,9 +2,12 @@
 
 (function () {
   var HASHTAGS_MAX = 5;
-  var HASHTAG_SYMBOL_REGEX = /^#/;
-  var HASHTAG_LENGTH_REGEX = /^#[0-9A-Za-zА-Яа-яЁё#]{1,19}$/;
-  var HASHTAG_WHITESPACE_REGEX = /^#[0-9A-Za-zА-Яа-яЁё]{1,19}$/;
+  var HashtagRegex = {
+    KEY: /^#/,
+    LENGTH: /^#[0-9A-Za-zА-Яа-яЁё#]{1,19}$/,
+    WHITESPACE: /^#[0-9A-Za-zА-Яа-яЁё]{1,19}$/
+  };
+
   var inputHashtags = document.querySelector('.text__hashtags');
   var submitButton = document.querySelector('.img-upload__submit');
 
@@ -32,13 +35,13 @@
       return;
     }
     for (var i = 0; i < hashtags.length; i++) {
-      if (!HASHTAG_SYMBOL_REGEX.test(hashtags[i])) {
+      if (!HashtagRegex.KEY.test(hashtags[i])) {
         inputHashtags.setCustomValidity('Хэштеги должны начинаться с символа #');
         break;
-      } else if (!HASHTAG_LENGTH_REGEX.test(hashtags[i])) {
+      } else if (!HashtagRegex.LENGTH.test(hashtags[i])) {
         inputHashtags.setCustomValidity('Каждый хэштег должен содержать от 1 до 19 букв и цифр');
         break;
-      } else if (!HASHTAG_WHITESPACE_REGEX.test(hashtags[i])) {
+      } else if (!HashtagRegex.WHITESPACE.test(hashtags[i])) {
         inputHashtags.setCustomValidity('Между хэштегами нужно ставить пробелы');
         break;
       } else {
@@ -47,9 +50,14 @@
     }
     if (!inputHashtags.reportValidity()) {
       inputHashtags.style.border = '2px solid #f44242';
-    } else {
-      inputHashtags.style.border = '';
+      inputHashtags.addEventListener('input', setValidity);
     }
+
+  };
+  var setValidity = function () {
+    inputHashtags.setCustomValidity('');
+    inputHashtags.style.border = '';
+    inputHashtags.removeEventListener('input', setValidity);
   };
 
   submitButton.addEventListener('click', validateHashtags);

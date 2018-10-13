@@ -3,7 +3,7 @@
   var Status = {
     OK: 200
   };
-  window.download = function (onLoad, onError) {
+  var download = function (onLoad, onError) {
     var URL = 'https://js.dump.academy/kekstagram/data';
     var getPhotosData = new XMLHttpRequest();
 
@@ -19,7 +19,7 @@
     getPhotosData.send();
   };
 
-  window.upload = function (data, onLoad, onError) {
+  var upload = function (data, onLoad, onError) {
     var URL = 'https://js.dump.academy/kekstagram';
     var sendFormData = new XMLHttpRequest();
 
@@ -33,5 +33,10 @@
 
     sendFormData.open('POST', URL);
     sendFormData.send(data);
+  };
+
+  window.backend = {
+    download: download,
+    upload: upload
   };
 })();
