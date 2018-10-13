@@ -17,7 +17,7 @@
 
   var currentScale = SCALE_DEFAULT;
 
-  var decreaseSize = function () {
+  var onScaleSmallerClick = function () {
     if (currentScale > SCALE_MIN) {
       scaleControlField.value = (currentScale - SCALE_STEP) + '%';
       imgPreview.style.transform = 'scale(' + (currentScale - SCALE_STEP) / 100 + ')';
@@ -25,7 +25,7 @@
     }
   };
 
-  var increaseSize = function () {
+  var onScaleBiggerClick = function () {
     if (currentScale < SCALE_MAX) {
       scaleControlField.value = (currentScale + SCALE_STEP) + '%';
       imgPreview.style.transform = 'scale(' + (currentScale + SCALE_STEP) / 100 + ')';
@@ -33,8 +33,8 @@
     }
   };
 
-  scaleControlSmaller.addEventListener('click', decreaseSize);
-  scaleControlBigger.addEventListener('click', increaseSize);
+  scaleControlSmaller.addEventListener('click', onScaleSmallerClick);
+  scaleControlBigger.addEventListener('click', onScaleBiggerClick);
 
   var effectLevelLine = document.querySelector('.effect-level__line');
   var effectLevelField = document.querySelector('.img-upload__effect-level');

@@ -50,14 +50,14 @@
     }
     if (!inputHashtags.reportValidity()) {
       inputHashtags.style.border = '2px solid #f44242';
-      inputHashtags.addEventListener('input', setValidity);
+      inputHashtags.addEventListener('input', onHashtagsFieldInput);
     }
 
   };
-  var setValidity = function () {
+  var onHashtagsFieldInput = function () {
     inputHashtags.setCustomValidity('');
     inputHashtags.style.border = '';
-    inputHashtags.removeEventListener('input', setValidity);
+    inputHashtags.removeEventListener('input', onHashtagsFieldInput);
   };
 
   submitButton.addEventListener('click', validateHashtags);
