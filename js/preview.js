@@ -29,6 +29,8 @@
       if (i < arrayElement.comments.length) {
         commentsFragment.appendChild(addComment(arrayElement.comments[i]));
         bigPicture.querySelector('.comments-loaded').textContent = String(i + 1);
+      } else {
+        break;
       }
     }
     bigPicture.querySelector('.social__comments').appendChild(commentsFragment);
