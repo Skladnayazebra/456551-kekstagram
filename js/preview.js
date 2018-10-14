@@ -41,23 +41,33 @@
       for (var i = 1; i <= photosData.length; i++) {
         if (trg.src.indexOf(i + '.jpg') >= 0) {
           renderBigPicture(photosData[i - 1]);
+          break;
         }
       }
       window.util.showElement(bigPicture);
       newCommentInput.focus();
       document.addEventListener('keydown', onBigPictureEscPress);
+      bigPictureCloseBtn.addEventListener('click', onBigPictureCloseBtnClick);
+      picturesContainer.removeEventListener('click', onPictureClick);
     }
   };
-
-  picturesContainer.addEventListener('click', onPictureClick);
 
   var onBigPictureEscPress = function (evt) {
     window.util.onEscPressClose(evt, bigPicture);
     document.removeEventListener('keydown', onBigPictureEscPress);
+    bigPictureCloseBtn.removeEventListener('click', onBigPictureCloseBtnClick);
+    picturesContainer.addEventListener('click', onPictureClick);
   };
 
-  bigPictureCloseBtn.addEventListener('click', function () {
+  var onBigPictureCloseBtnClick = function () {
     window.util.hideElement(bigPicture);
     document.removeEventListener('keydown', onBigPictureEscPress);
-  });
+    bigPictureCloseBtn.removeEventListener('click', onBigPictureCloseBtnClick);
+    picturesContainer.addEventListener('click', onPictureClick);
+  };
+
+  window.preview = {
+    onPictureClick: onPictureClick
+  };
+
 })();

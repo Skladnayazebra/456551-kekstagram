@@ -9,7 +9,6 @@
   };
 
   var inputHashtags = document.querySelector('.text__hashtags');
-  var submitButton = document.querySelector('.img-upload__submit');
 
   var onHashtagsFieldInput = function () {
     inputHashtags.setCustomValidity('');
@@ -66,6 +65,7 @@
     }
   };
 
-
-  submitButton.addEventListener('click', validateHashtags);
+  window.validation = {
+    validateHashtags: validateHashtags
+  };
 })();

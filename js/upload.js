@@ -16,6 +16,7 @@
   var inputHashtags = document.querySelector('.text__hashtags');
   var inputDescription = document.querySelector('.text__description');
   var form = document.querySelector('.img-upload__form');
+  var submitButton = document.querySelector('.img-upload__submit');
 
   var successDialogTemplate = document.querySelector('#success').content.querySelector('.success');
   var failDialogTemplate = document.querySelector('#error').content.querySelector('.error');
@@ -96,7 +97,7 @@
     form.addEventListener('submit', onFormSubmit);
     effectsList.addEventListener('change', window.effects.onEffectItemChecked);
     effectLevelPin.addEventListener('mousedown', window.effects.onPinMouseDown);
-    imgUploadField.removeEventListener('change', onUploadFieldChange);
+    submitButton.addEventListener('click', window.validation.validateHashtags);
   };
 
   var toggleListenersOff = function () {
@@ -104,11 +105,12 @@
     document.removeEventListener('keydown', onUploaderEscPress);
     imgUploadOverlayCloseBtn.removeEventListener('click', onUploadCloseBtnClick);
     effectLevelPin.removeEventListener('mousedown', window.effects.onPinMouseDown);
-    imgUploadField.addEventListener('change', onUploadFieldChange);
+    submitButton.removeEventListener('click', window.validation.validateHashtags);
   };
 
   var onUploadFieldChange = function () {
     toggleListenersOn();
+    imgUploadField.removeEventListener('change', onUploadFieldChange);
     effectNone.checked = true;
     window.effects.effectLevelReset();
     window.util.hideElement(effectLevelField);
@@ -121,6 +123,7 @@
       if (evt.key === window.util.ESC_KEY) {
         onUploaderHideClean();
         toggleListenersOff();
+        imgUploadField.addEventListener('change', onUploadFieldChange);
       }
     }
   };
@@ -129,12 +132,14 @@
     window.util.hideElement(imgUploadOverlay);
     onUploaderHideClean();
     toggleListenersOff();
+    imgUploadField.addEventListener('change', onUploadFieldChange);
   };
 
   var onFormSubmit = function (evt) {
     window.backend.upload(new FormData(form), onSuccess, onFail);
     evt.preventDefault();
     toggleListenersOff();
+    imgUploadField.addEventListener('change', onUploadFieldChange);
   };
 
   window.upload = {
