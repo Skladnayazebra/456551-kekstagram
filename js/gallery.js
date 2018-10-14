@@ -9,6 +9,8 @@
   var main = document.querySelector('main');
   var photosData = [];
 
+  var imgUploadField = document.querySelector('#upload-file');
+
   var createPictureElement = function (pictureData) {
     var picture = pictureTemplate.cloneNode(true);
     picture.querySelector('.picture__img').setAttribute('src', pictureData.url);
@@ -42,6 +44,7 @@
     photosData = JSON.parse(data);
     fillPicturesContainer(photosData);
     document.querySelector('.img-filters').classList.remove('img-filters--inactive');
+    imgUploadField.addEventListener('change', window.upload.onUploadFieldChange);
     window.photosData = photosData;
   };
   var onError = function (message) {

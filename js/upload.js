@@ -19,10 +19,10 @@
   var successDialogTemplate = document.querySelector('#success').content.querySelector('.success');
   var failDialogTemplate = document.querySelector('#error').content.querySelector('.error');
 
-  var onUploadOverlaySetEffect = function () {
-    window.effects.applyEffect(window.effects.EFFECT_LEVEL_DEFAULT);
-    document.querySelector('.effect-level__value').value = '';
-  };
+  // var onUploadOverlaySetEffect = function () {
+  //   window.effects.applyEffect(window.effects.EFFECT_LEVEL_DEFAULT);
+  //   document.querySelector('.effect-level__value').value = '';
+  // };
 
   var onUploaderHideClean = function () {
     imgUploadField.value = null;
@@ -42,13 +42,6 @@
     var successDialog = successDialogTemplate.cloneNode(true);
     successDialog.querySelector('.success__title').textContent = message;
     window.util.showDialog(successDialog);
-
-    var successButton = document.querySelector('.success__button');
-    var onSuccessButtonClick = function () {
-      window.util.hideDialog(successDialog);
-      successButton.removeEventListener('click', onSuccessButtonClick);
-    };
-    successButton.addEventListener('click', onSuccessButtonClick);
 
     var onSuccessDialogEscPress = function (evt) {
       window.util.onEscPressCloseDialog(evt, successDialog);
@@ -100,36 +93,49 @@
   };
   // Позже разберусь, как сделать всё коротко и красиво
 
+  var toggleListenersOff = function () {
+    effectsList.removeEventListener('change', window.effects.onEffectItemChecked);
+    document.removeEventListener('keydown', onUploaderEscPress);
+    imgUploadOverlayCloseBtn.removeEventListener('click', onUploadCloseBtnClick);
+    imgUploadField.addEventListener('change', onUploadFieldChange);
+  };
+
   var onUploaderEscPress = function (evt) {
     if (document.activeElement !== inputHashtags && document.activeElement !== inputDescription) {
       window.util.onEscPressClose(evt, imgUploadOverlay);
       if (evt.keyCode === window.util.ESC_KEYCODE) {
         onUploaderHideClean();
+        toggleListenersOff();
       }
     }
   };
 
-  imgUploadField.addEventListener('change', function () {
+  var onUploadFieldChange = function () {
     window.util.showElement(imgUploadOverlay);
     // onUploadOverlaySetEffect();
     document.addEventListener('keydown', onUploaderEscPress);
+    imgUploadOverlayCloseBtn.addEventListener('click', onUploadCloseBtnClick);
+    form.addEventListener('submit', onFormSubmit);
     effectsList.addEventListener('change', window.effects.onEffectItemChecked);
+    imgUploadField.removeEventListener('change', onUploadFieldChange);
     effectNone.checked = true;
     window.util.hideElement(effectLevelField);
-  });
+  };
 
-  imgUploadOverlayCloseBtn.addEventListener('click', function () {
+  var onUploadCloseBtnClick = function () {
     window.util.hideElement(imgUploadOverlay);
     onUploaderHideClean();
-    document.removeEventListener('keydown', onUploaderEscPress);
-    effectsList.removeEventListener('change', window.effects.onEffectItemChecked);
-  });
+    toggleListenersOff();
+  };
 
-  form.addEventListener('submit', function (evt) {
+  var onFormSubmit = function (evt) {
     window.backend.upload(new FormData(form), onSuccess, onFail);
     evt.preventDefault();
-    document.removeEventListener('keydown', onUploaderEscPress);
-    effectsList.removeEventListener('change', window.effects.onEffectItemChecked);
-  });
+    toggleListenersOff();
+  };
+
+  window.upload = {
+    onUploadFieldChange: onUploadFieldChange
+  };
 
 })();
