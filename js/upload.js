@@ -95,7 +95,6 @@
     };
     document.addEventListener('click', onScreenClick);
   };
-  // Позже разберусь, как сделать всё коротко и красиво
 
   var toggleListenersOn = function () {
     document.addEventListener('keydown', onUploaderEscPress);
@@ -116,11 +115,9 @@
 
   var uploadFile = function (file) {
     var fileName = file.name.toLowerCase();
-
     var matches = FILE_TYPES.some(function (it) {
       return fileName.endsWith(it);
     });
-
     if (matches) {
       var reader = new FileReader();
 
@@ -132,7 +129,6 @@
         effectsPreview.style.backgroundImage = 'url(' + reader.result + ')';
         effectsPreview.style.backgroundSize = 'cover';
       });
-
       reader.readAsDataURL(file);
     }
   };

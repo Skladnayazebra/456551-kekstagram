@@ -10,7 +10,6 @@
   var commentsFragment = document.createDocumentFragment();
   var newCommentInput = document.querySelector('.social__footer-text');
 
-  // добавление одного комментария в блок просмотра фотографии
   var addComment = function (arrayElement) {
     var newComment = commentTemplate.cloneNode(true);
     var avatarUrl = 'img/avatar-' + window.util.generateNumber(1, AVATAR_VARIANTS) + '.svg';
@@ -18,7 +17,7 @@
     newComment.querySelector('.social__text').textContent = arrayElement;
     return newComment;
   };
-  // наполнение блока bigPicture данными
+
   var renderBigPicture = function (arrayElement) {
     bigPicture.querySelector('.social__comments').innerHTML = '';
     bigPicture.querySelector('.big-picture__img img').setAttribute('src', arrayElement.url);
