@@ -118,7 +118,7 @@
   var onUploaderEscPress = function (evt) {
     if (document.activeElement !== inputHashtags && document.activeElement !== inputDescription) {
       window.util.onEscPressClose(evt, imgUploadOverlay);
-      if (evt.keyCode === window.util.ESC_KEYCODE) {
+      if (evt.key === window.util.ESC_KEY) {
         onUploaderHideClean();
         toggleListenersOff();
       }
@@ -132,9 +132,9 @@
   };
 
   var onFormSubmit = function (evt) {
-    // window.backend.upload(new FormData(form), onSuccess, onFail);
-    // evt.preventDefault();
-    // toggleListenersOff();
+    window.backend.upload(new FormData(form), onSuccess, onFail);
+    evt.preventDefault();
+    toggleListenersOff();
   };
 
   window.upload = {

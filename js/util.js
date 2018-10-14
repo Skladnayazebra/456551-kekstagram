@@ -1,7 +1,7 @@
 'use strict';
 
 (function () {
-  var ESC_KEYCODE = 27;
+  var ESC_KEY = 'Escape';
   var DEBOUNCE_INTERVAL = 500; // ms
   var main = document.querySelector('main');
 
@@ -28,13 +28,13 @@
   };
 
   var onEscPressClose = function (evt, element) {
-    if (evt.keyCode === ESC_KEYCODE) {
+    if (evt.key === ESC_KEY) {
       hideElement(element);
     }
   };
 
   var onEscPressCloseDialog = function (evt, dialog) {
-    if (evt.keyCode === ESC_KEYCODE) {
+    if (evt.key === ESC_KEY) {
       hideDialog(dialog);
     }
   };
@@ -53,7 +53,7 @@
   };
 
   window.util = {
-    ESC_KEYCODE: ESC_KEYCODE,
+    ESC_KEY: ESC_KEY,
     generateNumber: generateNumber,
     showElement: showElement,
     hideElement: hideElement,
