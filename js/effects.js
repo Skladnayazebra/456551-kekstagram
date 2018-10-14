@@ -42,12 +42,22 @@
   var effectLevelDepth = document.querySelector('.effect-level__depth');
   var effectLevelValue = document.querySelector('.effect-level__value').value;
 
-  var effectNone = document.querySelector('#effect-none');
-  var effectChrome = document.querySelector('#effect-chrome');
-  var effectSepia = document.querySelector('#effect-sepia');
-  var effectMarvin = document.querySelector('#effect-marvin');
-  var effectPhobos = document.querySelector('#effect-phobos');
-  var effectHeat = document.querySelector('#effect-heat');
+  var effectIdToImgClass = {
+    'effect-none': 'effects__preview--none',
+    'effect-chrome': 'effects__preview--chrome',
+    'effect-sepia': 'effects__preview--sepia',
+    'effect-marvin': 'effects__preview--marvin',
+    'effect-phobos': 'effects__preview--phobos',
+    'effect-heat': 'effects__preview--heat'
+  };
+
+  var onEffectItemClick = function (evt) {
+    if (evt.target.closest('.effects__radio')) {
+      var effectId = evt.target.closest('.effects__radio').id;
+      imgPreview.className = '';
+      imgPreview.classList.add(effectIdToImgClass[effectId]);
+    }
+  };
 
   var switchEffect = function (effectClass) {
     imgPreview.style.filter = '';
@@ -82,40 +92,6 @@
     }
   };
 
-  var effectIdToFilter = {
-    'effect-none': '',
-    'effect-chrome': 'grayscale(' + effectLevel / 100 + ')',
-    'effect-sepia': 'sepia(' + effectLevel / 100 + ')',
-    'effect-marvin': 'invert(' + effectLevel + '%)',
-    'effect-phobos': 'blur(' + effectLevel / 100 * 3 + 'px)',
-    'effect-heat': 'brightness(' + (1 + effectLevel / 100 * 2) + ')'
-  };
-
-  // effectNone.addEventListener('click', function () {
-  //   switchEffect('effects__preview--none');
-  //   effectLevelField.classList.add('hidden');
-  // });
-  //
-  // effectChrome.addEventListener('click', function () {
-  //   switchEffect('effects__preview--chrome');
-  // });
-  //
-  // effectSepia.addEventListener('click', function () {
-  //   switchEffect('effects__preview--sepia');
-  // });
-  //
-  // effectMarvin.addEventListener('click', function () {
-  //   switchEffect('effects__preview--marvin');
-  // });
-  //
-  // effectPhobos.addEventListener('click', function () {
-  //   switchEffect('effects__preview--phobos');
-  // });
-  //
-  // effectHeat.addEventListener('click', function () {
-  //   switchEffect('effects__preview--heat');
-  // });
-
   var onPinMouseDown = function (evt) {
     evt.preventDefault();
     var effectLineStart = effectLevelLine.getBoundingClientRect().x;
@@ -148,6 +124,7 @@
   window.effects = {
     EFFECT_LEVEL_DEFAULT: EFFECT_LEVEL_DEFAULT,
     SCALE_DEFAULT: SCALE_DEFAULT,
-    applyEffect: applyEffect
+    applyEffect: applyEffect,
+    onEffectItemClick: onEffectItemClick
   };
 })();

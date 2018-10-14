@@ -105,31 +105,25 @@
     }
   };
 
-  var onEffectItemClick = function (evt) {
-    if (evt.target.closest('.effects__radio')) {
-      console.log(evt.target.closest('.effects__radio').id);
-    }
-  };
-
   imgUploadField.addEventListener('change', function () {
     window.util.showElement(imgUploadOverlay);
     onUploadOverlaySetEffect();
     document.addEventListener('keydown', onUploaderEscPress);
-    effectsList.addEventListener('click', onEffectItemClick);
+    effectsList.addEventListener('click', window.effects.onEffectItemClick);
   });
 
   imgUploadOverlayCloseBtn.addEventListener('click', function () {
     window.util.hideElement(imgUploadOverlay);
     onUploaderHideClean();
     document.removeEventListener('keydown', onUploaderEscPress);
-    effectsList.removeEventListener('click', onEffectItemClick);
+    effectsList.removeEventListener('click', window.effects.onEffectItemClick);
   });
 
   form.addEventListener('submit', function (evt) {
     window.backend.upload(new FormData(form), onSuccess, onFail);
     evt.preventDefault();
     document.removeEventListener('keydown', onUploaderEscPress);
-    effectsList.removeEventListener('click', onEffectItemClick);
+    effectsList.removeEventListener('click', window.effects.onEffectItemClick);
   });
 
 })();
