@@ -19,11 +19,6 @@
   var successDialogTemplate = document.querySelector('#success').content.querySelector('.success');
   var failDialogTemplate = document.querySelector('#error').content.querySelector('.error');
 
-  // var onUploadOverlaySetEffect = function () {
-  //   window.effects.applyEffect(window.effects.EFFECT_LEVEL_DEFAULT);
-  //   document.querySelector('.effect-level__value').value = '';
-  // };
-
   var onUploaderHideClean = function () {
     imgUploadField.value = null;
     effectNone.checked = 'true';
@@ -45,6 +40,7 @@
 
     var onSuccessDialogEscPress = function (evt) {
       window.util.onEscPressCloseDialog(evt, successDialog);
+      document.removeEventListener('click', onScreenClick);
       document.removeEventListener('keydown', onSuccessDialogEscPress);
     };
     document.addEventListener('keydown', onSuccessDialogEscPress);
@@ -52,6 +48,7 @@
     var onScreenClick = function () {
       window.util.hideDialog(successDialog);
       document.removeEventListener('click', onScreenClick);
+      document.removeEventListener('keydown', onSuccessDialogEscPress);
     };
     document.addEventListener('click', onScreenClick);
   };
@@ -93,6 +90,14 @@
   };
   // Позже разберусь, как сделать всё коротко и красиво
 
+  var toggleListenersOn = function () {
+    document.addEventListener('keydown', onUploaderEscPress);
+    imgUploadOverlayCloseBtn.addEventListener('click', onUploadCloseBtnClick);
+    form.addEventListener('submit', onFormSubmit);
+    effectsList.addEventListener('change', window.effects.onEffectItemChecked);
+    imgUploadField.removeEventListener('change', onUploadFieldChange);
+  };
+
   var toggleListenersOff = function () {
     effectsList.removeEventListener('change', window.effects.onEffectItemChecked);
     document.removeEventListener('keydown', onUploaderEscPress);
@@ -112,12 +117,7 @@
 
   var onUploadFieldChange = function () {
     window.util.showElement(imgUploadOverlay);
-    // onUploadOverlaySetEffect();
-    document.addEventListener('keydown', onUploaderEscPress);
-    imgUploadOverlayCloseBtn.addEventListener('click', onUploadCloseBtnClick);
-    form.addEventListener('submit', onFormSubmit);
-    effectsList.addEventListener('change', window.effects.onEffectItemChecked);
-    imgUploadField.removeEventListener('change', onUploadFieldChange);
+    toggleListenersOn();
     effectNone.checked = true;
     window.util.hideElement(effectLevelField);
   };
