@@ -51,11 +51,15 @@
     'effect-heat': 'effects__preview--heat'
   };
 
-  var onEffectItemClick = function (evt) {
+  var onEffectItemChecked = function (evt) {
     if (evt.target.closest('.effects__radio')) {
       var effectId = evt.target.closest('.effects__radio').id;
       imgPreview.className = '';
       imgPreview.classList.add(effectIdToImgClass[effectId]);
+      window.util.showElement(effectLevelField);
+      if (effectId === 'effect-none') {
+        window.util.hideElement(effectLevelField);
+      }
     }
   };
 
@@ -125,6 +129,6 @@
     EFFECT_LEVEL_DEFAULT: EFFECT_LEVEL_DEFAULT,
     SCALE_DEFAULT: SCALE_DEFAULT,
     applyEffect: applyEffect,
-    onEffectItemClick: onEffectItemClick
+    onEffectItemChecked: onEffectItemChecked
   };
 })();

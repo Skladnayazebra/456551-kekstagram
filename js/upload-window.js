@@ -6,12 +6,16 @@
   var imgUploadField = document.querySelector('#upload-file');
   var imgUploadOverlay = document.querySelector('.img-upload__overlay');
   var imgUploadOverlayCloseBtn = document.querySelector('.img-upload__cancel');
+
   var scaleControlField = document.querySelector('.scale__control--value');
+  var effectLevelField = document.querySelector('.img-upload__effect-level');
   var effectsList = document.querySelector('.effects__list');
   var effectNone = document.querySelector('#effect-none');
+
   var inputHashtags = document.querySelector('.text__hashtags');
   var inputDescription = document.querySelector('.text__description');
   var form = document.querySelector('.img-upload__form');
+
   var successDialogTemplate = document.querySelector('#success').content.querySelector('.success');
   var failDialogTemplate = document.querySelector('#error').content.querySelector('.error');
 
@@ -107,23 +111,25 @@
 
   imgUploadField.addEventListener('change', function () {
     window.util.showElement(imgUploadOverlay);
-    onUploadOverlaySetEffect();
+    // onUploadOverlaySetEffect();
     document.addEventListener('keydown', onUploaderEscPress);
-    effectsList.addEventListener('click', window.effects.onEffectItemClick);
+    effectsList.addEventListener('change', window.effects.onEffectItemChecked);
+    effectNone.checked = true;
+    window.util.hideElement(effectLevelField);
   });
 
   imgUploadOverlayCloseBtn.addEventListener('click', function () {
     window.util.hideElement(imgUploadOverlay);
     onUploaderHideClean();
     document.removeEventListener('keydown', onUploaderEscPress);
-    effectsList.removeEventListener('click', window.effects.onEffectItemClick);
+    effectsList.removeEventListener('change', window.effects.onEffectItemChecked);
   });
 
   form.addEventListener('submit', function (evt) {
     window.backend.upload(new FormData(form), onSuccess, onFail);
     evt.preventDefault();
     document.removeEventListener('keydown', onUploaderEscPress);
-    effectsList.removeEventListener('click', window.effects.onEffectItemClick);
+    effectsList.removeEventListener('change', window.effects.onEffectItemChecked);
   });
 
 })();
