@@ -52,11 +52,20 @@
     'effect-heat': 'effects__preview--heat'
   };
 
+  var effectLevelReset = function () {
+    effectLevelPin.style.left = EFFECT_LEVEL_DEFAULT + '%';
+    effectLevelDepth.style.width = EFFECT_LEVEL_DEFAULT + '%';
+    effectLevelValue = String(EFFECT_LEVEL_DEFAULT);
+  };
+
   var onEffectItemChecked = function (evt) {
     if (evt.target.closest('.effects__radio')) {
       var effectId = evt.target.closest('.effects__radio').id;
+      imgPreview.style.filter = '';
       imgPreview.className = '';
       imgPreview.classList.add(effectIdToImgClass[effectId]);
+      effectLevelReset();
+
       window.util.showElement(effectLevelField);
       if (effectId === 'effect-none') {
         window.util.hideElement(effectLevelField);
@@ -64,37 +73,28 @@
     }
   };
 
-  var switchEffect = function (effectClass) {
-    imgPreview.style.filter = '';
-    imgPreview.className = effectClass;
-    effectLevelField.classList.remove('hidden');
-    effectLevelPin.style.left = EFFECT_LEVEL_DEFAULT + '%';
-    effectLevelDepth.style.width = EFFECT_LEVEL_DEFAULT + '%';
-    document.querySelector('.effect-level__value').value = String(EFFECT_LEVEL_DEFAULT);
-  };
-
   var applyEffect = function (effectLevel) {
-    switch (document.querySelector('.effects__radio:checked').id) {
-      case 'effect-none' :
-        effectLevelField.classList.add('hidden');
-        document.querySelector('.effect-level__value').value = '';
-        break;
-      case 'effect-chrome' :
+    switch (imgPreview.className) {
+      case 'effects__preview--chrome' :
         imgPreview.style.filter = 'grayscale(' + effectLevel / 100 + ')';
         break;
-      case 'effect-sepia' :
+      case 'effects__preview--sepia' :
         imgPreview.style.filter = 'sepia(' + effectLevel / 100 + ')';
         break;
-      case 'effect-marvin' :
+      case 'effects__preview--marvin' :
         imgPreview.style.filter = 'invert(' + effectLevel + '%)';
         break;
-      case 'effect-phobos' :
+      case 'effects__preview--phobos' :
         imgPreview.style.filter = 'blur(' + effectLevel / 100 * 3 + 'px)';
         break;
-      case 'effect-heat' :
+      case 'effects__preview--heat' :
         imgPreview.style.filter = 'brightness(' + (1 + effectLevel / 100 * 2) + ')';
         break;
     }
+    var classToEffect = {
+      'effects__preview--chrome': 'grayscale(' + effectLevel / 100 + ')',
+      'effects__preview--sepia': 'sepia(' + effectLevel / 100 + ')'
+    };
   };
 
   var onPinMouseDown = function (evt) {
@@ -108,7 +108,7 @@
       if (pinPosition >= 0 && pinPosition <= effectLineWidth) {
         effectLevelPin.style.left = pinPosition + 'px';
         effectLevelDepth.style.width = pinPosition + 'px';
-        effectLevelValue = Math.round(pinPosition / effectLineWidth * 100);
+        effectLevelValue = String(Math.round(pinPosition / effectLineWidth * 100));
         document.querySelector('.effect-level__value').value = String(effectLevelValue);
         applyEffect(effectLevelValue);
       }
@@ -124,12 +124,11 @@
     document.addEventListener('mouseup', onPinMouseUp);
   };
 
-  effectLevelPin.addEventListener('mousedown', onPinMouseDown);
-
   window.effects = {
     EFFECT_LEVEL_DEFAULT: EFFECT_LEVEL_DEFAULT,
     SCALE_DEFAULT: SCALE_DEFAULT,
-    applyEffect: applyEffect,
-    onEffectItemChecked: onEffectItemChecked
+    effectLevelReset: effectLevelReset,
+    onEffectItemChecked: onEffectItemChecked,
+    onPinMouseDown: onPinMouseDown
   };
 })();

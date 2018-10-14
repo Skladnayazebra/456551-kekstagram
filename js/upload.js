@@ -9,6 +9,7 @@
 
   var scaleControlField = document.querySelector('.scale__control--value');
   var effectLevelField = document.querySelector('.img-upload__effect-level');
+  var effectLevelPin = document.querySelector('.effect-level__pin');
   var effectsList = document.querySelector('.effects__list');
   var effectNone = document.querySelector('#effect-none');
 
@@ -21,7 +22,6 @@
 
   var onUploaderHideClean = function () {
     imgUploadField.value = null;
-    effectNone.checked = 'true';
     imgPreview.className = '';
     imgPreview.style.filter = '';
     scaleControlField.value = window.effects.SCALE_DEFAULT + '%';
@@ -95,6 +95,7 @@
     imgUploadOverlayCloseBtn.addEventListener('click', onUploadCloseBtnClick);
     form.addEventListener('submit', onFormSubmit);
     effectsList.addEventListener('change', window.effects.onEffectItemChecked);
+    effectLevelPin.addEventListener('mousedown', window.effects.onPinMouseDown);
     imgUploadField.removeEventListener('change', onUploadFieldChange);
   };
 
@@ -102,7 +103,16 @@
     effectsList.removeEventListener('change', window.effects.onEffectItemChecked);
     document.removeEventListener('keydown', onUploaderEscPress);
     imgUploadOverlayCloseBtn.removeEventListener('click', onUploadCloseBtnClick);
+    effectLevelPin.removeEventListener('mousedown', window.effects.onPinMouseDown);
     imgUploadField.addEventListener('change', onUploadFieldChange);
+  };
+
+  var onUploadFieldChange = function () {
+    toggleListenersOn();
+    effectNone.checked = true;
+    window.effects.effectLevelReset();
+    window.util.hideElement(effectLevelField);
+    window.util.showElement(imgUploadOverlay);
   };
 
   var onUploaderEscPress = function (evt) {
@@ -115,13 +125,6 @@
     }
   };
 
-  var onUploadFieldChange = function () {
-    window.util.showElement(imgUploadOverlay);
-    toggleListenersOn();
-    effectNone.checked = true;
-    window.util.hideElement(effectLevelField);
-  };
-
   var onUploadCloseBtnClick = function () {
     window.util.hideElement(imgUploadOverlay);
     onUploaderHideClean();
@@ -129,9 +132,9 @@
   };
 
   var onFormSubmit = function (evt) {
-    window.backend.upload(new FormData(form), onSuccess, onFail);
-    evt.preventDefault();
-    toggleListenersOff();
+    // window.backend.upload(new FormData(form), onSuccess, onFail);
+    // evt.preventDefault();
+    // toggleListenersOff();
   };
 
   window.upload = {
