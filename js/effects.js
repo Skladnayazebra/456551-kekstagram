@@ -11,6 +11,7 @@
   var SCALE_DEFAULT = 100;
 
   var imgPreview = document.querySelector('.img-upload__preview img');
+  var imgContainer = document.querySelector('.img-upload__preview');
   var scaleControlSmaller = document.querySelector('.scale__control--smaller');
   var scaleControlBigger = document.querySelector('.scale__control--bigger');
   var scaleControlField = document.querySelector('.scale__control--value');
@@ -20,7 +21,7 @@
   var onScaleSmallerClick = function () {
     if (currentScale > SCALE_MIN) {
       scaleControlField.value = (currentScale - SCALE_STEP) + '%';
-      imgPreview.style.transform = 'scale(' + (currentScale - SCALE_STEP) / 100 + ')';
+      imgContainer.style.transform = 'scale(' + (currentScale - SCALE_STEP) / 100 + ')';
       currentScale -= SCALE_STEP;
     }
   };
@@ -28,7 +29,7 @@
   var onScaleBiggerClick = function () {
     if (currentScale < SCALE_MAX) {
       scaleControlField.value = (currentScale + SCALE_STEP) + '%';
-      imgPreview.style.transform = 'scale(' + (currentScale + SCALE_STEP) / 100 + ')';
+      imgContainer.style.transform = 'scale(' + (currentScale + SCALE_STEP) / 100 + ')';
       currentScale += SCALE_STEP;
     }
   };
