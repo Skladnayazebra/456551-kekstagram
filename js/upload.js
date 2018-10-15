@@ -17,7 +17,7 @@
   var effectLevelPin = document.querySelector('.effect-level__pin');
   var effectsList = document.querySelector('.effects__list');
   var effectNone = document.querySelector('#effect-none');
-  var effectsPreview = document.querySelector('.effects__preview');
+  var effectsPreviews = document.querySelectorAll('.effects__preview');
 
   var inputHashtags = document.querySelector('.text__hashtags');
   var inputDescription = document.querySelector('.text__description');
@@ -28,6 +28,10 @@
   var failDialogTemplate = document.querySelector('#error').content.querySelector('.error');
 
   var onUploaderHideClean = function () {
+    imgPreview.src = '';
+    effectsPreviews.forEach(function (element) {
+      element.src = '';
+    });
     imgUploadField.value = null;
     imgPreview.className = '';
     imgPreview.style.filter = '';
@@ -126,8 +130,10 @@
         imgPreview.style.objectFit = 'cover';
         imgPreview.width = PreviewSize.WIDTH;
         imgPreview.height = PreviewSize.HEIGHT;
-        effectsPreview.style.backgroundImage = 'url(' + reader.result + ')';
-        effectsPreview.style.backgroundSize = 'cover';
+        effectsPreviews.forEach(function (element) {
+          element.src = reader.result;
+          element.style.objectFit = 'cover';
+        });
       });
       reader.readAsDataURL(file);
     }
