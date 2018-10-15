@@ -27,12 +27,6 @@
     main.removeChild(dialog);
   };
 
-  var onEscPressClose = function (evt, element) {
-    if (evt.key === ESC_KEY) {
-      hideElement(element);
-    }
-  };
-
   var onEscPressCloseDialog = function (evt, dialog) {
     if (evt.key === ESC_KEY) {
       hideDialog(dialog);
@@ -59,7 +53,6 @@
     hideElement: hideElement,
     showDialog: showDialog,
     hideDialog: hideDialog,
-    onEscPressClose: onEscPressClose,
     onEscPressCloseDialog: onEscPressCloseDialog,
     debounce: debounce
   };

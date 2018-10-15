@@ -152,8 +152,8 @@
 
   var onUploaderEscPress = function (evt) {
     if (document.activeElement !== inputHashtags && document.activeElement !== inputDescription) {
-      window.util.onEscPressClose(evt, imgUploadOverlay);
       if (evt.key === window.util.ESC_KEY) {
+        window.util.hideElement(imgUploadOverlay);
         onUploaderHideClean();
         toggleListenersOff();
         imgUploadField.addEventListener('change', onUploadFieldChange);
