@@ -7,6 +7,8 @@
     HEIGHT: '586'
   };
 
+  var body = document.querySelector('body');
+
   var imgPreview = document.querySelector('.img-upload__preview img');
   var imgUploadField = document.querySelector('#upload-file');
   var imgUploadOverlay = document.querySelector('.img-upload__overlay');
@@ -39,6 +41,7 @@
     imgPreview.style.transform = 'scale(' + (window.effects.SCALE_DEFAULT) / 100 + ')';
     inputHashtags.value = null;
     inputDescription.value = null;
+    inputHashtags.style.border = '';
   };
 
   var onSuccess = function (message) {
@@ -107,6 +110,7 @@
     effectsList.addEventListener('change', window.effects.onEffectItemChecked);
     effectLevelPin.addEventListener('mousedown', window.effects.onPinMouseDown);
     submitButton.addEventListener('click', window.validation.validateHashtags);
+    inputHashtags.addEventListener('input', window.validation.onHashtagsFieldInput);
   };
 
   var toggleListenersOff = function () {
@@ -115,6 +119,7 @@
     imgUploadOverlayCloseBtn.removeEventListener('click', onUploadCloseBtnClick);
     effectLevelPin.removeEventListener('mousedown', window.effects.onPinMouseDown);
     submitButton.removeEventListener('click', window.validation.validateHashtags);
+    inputHashtags.removeEventListener('input', window.validation.onHashtagsFieldInput);
   };
 
   var uploadFile = function (file) {
@@ -148,6 +153,7 @@
     window.effects.effectLevelReset();
     window.util.hideElement(effectLevelField);
     window.util.showElement(imgUploadOverlay);
+    body.classList.add('modal-open');
   };
 
   var onUploaderEscPress = function (evt) {
@@ -157,6 +163,7 @@
         onUploaderHideClean();
         toggleListenersOff();
         imgUploadField.addEventListener('change', onUploadFieldChange);
+        body.classList.remove('modal-open');
       }
     }
   };
@@ -166,6 +173,7 @@
     onUploaderHideClean();
     toggleListenersOff();
     imgUploadField.addEventListener('change', onUploadFieldChange);
+    body.classList.remove('modal-open');
   };
 
   var onFormSubmit = function (evt) {
@@ -173,6 +181,7 @@
     evt.preventDefault();
     toggleListenersOff();
     imgUploadField.addEventListener('change', onUploadFieldChange);
+    body.classList.remove('modal-open');
   };
 
   window.upload = {

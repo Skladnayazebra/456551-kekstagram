@@ -4,6 +4,8 @@
   var AVATAR_VARIANTS = 6;
   var COMMENTS_ADDED = 5;
 
+  var body = document.querySelector('body');
+
   var picturesContainer = document.querySelector('.pictures');
   var bigPicture = document.querySelector('.big-picture');
   var bigPictureCloseBtn = bigPicture.querySelector('.big-picture__cancel');
@@ -84,6 +86,7 @@
       bigPictureCloseBtn.focus();
       toggleListenersOn();
       picturesContainer.removeEventListener('click', onPictureClick);
+      body.classList.add('modal-open');
     }
   };
 
@@ -96,6 +99,7 @@
       window.util.hideElement(bigPicture);
       toggleListenersOff();
       picturesContainer.addEventListener('click', onPictureClick);
+      body.classList.remove('modal-open');
     }
   };
 
@@ -103,6 +107,7 @@
     window.util.hideElement(bigPicture);
     toggleListenersOff();
     picturesContainer.addEventListener('click', onPictureClick);
+    body.classList.remove('modal-open');
   };
 
   window.preview = {
