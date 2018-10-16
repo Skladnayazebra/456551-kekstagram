@@ -2,12 +2,14 @@
 
 (function () {
   var NEW_PHOTOS_COUNT = 10;
-  var pictures = document.querySelector('.pictures');
+  var picturesContainer = document.querySelector('.pictures');
   var pictureTemplate = document.querySelector('#picture').content.querySelector('.picture');
 
   var errorDialogTemplate = document.querySelector('#error').content.querySelector('.error');
   var main = document.querySelector('main');
   var photosData = [];
+
+  var imgUploadField = document.querySelector('#upload-file');
 
   var createPictureElement = function (pictureData) {
     var picture = pictureTemplate.cloneNode(true);
@@ -22,12 +24,12 @@
     dataArray.forEach(function (element) {
       pictureFragment.appendChild(createPictureElement(element));
     });
-    pictures.appendChild(pictureFragment);
+    picturesContainer.appendChild(pictureFragment);
   };
 
   var refreshPics = function (dataArray) {
-    while (pictures.lastChild.className === 'picture') {
-      pictures.removeChild(pictures.lastChild);
+    while (picturesContainer.lastChild.className === 'picture') {
+      picturesContainer.removeChild(picturesContainer.lastChild);
     }
     fillPicturesContainer(dataArray);
   };
@@ -42,6 +44,8 @@
     photosData = JSON.parse(data);
     fillPicturesContainer(photosData);
     document.querySelector('.img-filters').classList.remove('img-filters--inactive');
+    imgUploadField.addEventListener('change', window.upload.onUploadFieldChange);
+    picturesContainer.addEventListener('click', window.preview.onPictureClick);
     window.photosData = photosData;
   };
   var onError = function (message) {
@@ -50,6 +54,7 @@
     errorDialog.querySelector('.error__buttons').remove();
     showDialog(errorDialog);
   };
+
   window.backend.download(onLoad, onError);
 
   var filterPopularButton = document.querySelector('#filter-popular');

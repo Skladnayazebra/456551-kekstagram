@@ -1,27 +1,38 @@
 'use strict';
 
 (function () {
+  var FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
+  var PreviewSize = {
+    WIDTH: '586',
+    HEIGHT: '586'
+  };
 
   var imgPreview = document.querySelector('.img-upload__preview img');
   var imgUploadField = document.querySelector('#upload-file');
   var imgUploadOverlay = document.querySelector('.img-upload__overlay');
   var imgUploadOverlayCloseBtn = document.querySelector('.img-upload__cancel');
+
   var scaleControlField = document.querySelector('.scale__control--value');
+  var effectLevelField = document.querySelector('.img-upload__effect-level');
+  var effectLevelPin = document.querySelector('.effect-level__pin');
+  var effectsList = document.querySelector('.effects__list');
   var effectNone = document.querySelector('#effect-none');
+  var effectsPreviews = document.querySelectorAll('.effects__preview');
+
   var inputHashtags = document.querySelector('.text__hashtags');
   var inputDescription = document.querySelector('.text__description');
   var form = document.querySelector('.img-upload__form');
+  var submitButton = document.querySelector('.img-upload__submit');
+
   var successDialogTemplate = document.querySelector('#success').content.querySelector('.success');
   var failDialogTemplate = document.querySelector('#error').content.querySelector('.error');
 
-  var onUploadOverlaySetEffect = function () {
-    window.effects.applyEffect(window.effects.EFFECT_LEVEL_DEFAULT);
-    document.querySelector('.effect-level__value').value = '';
-  };
-
   var onUploaderHideClean = function () {
+    imgPreview.src = '';
+    effectsPreviews.forEach(function (element) {
+      element.src = '';
+    });
     imgUploadField.value = null;
-    effectNone.checked = 'true';
     imgPreview.className = '';
     imgPreview.style.filter = '';
     scaleControlField.value = window.effects.SCALE_DEFAULT + '%';
@@ -38,15 +49,9 @@
     successDialog.querySelector('.success__title').textContent = message;
     window.util.showDialog(successDialog);
 
-    var successButton = document.querySelector('.success__button');
-    var onSuccessButtonClick = function () {
-      window.util.hideDialog(successDialog);
-      successButton.removeEventListener('click', onSuccessButtonClick);
-    };
-    successButton.addEventListener('click', onSuccessButtonClick);
-
     var onSuccessDialogEscPress = function (evt) {
       window.util.onEscPressCloseDialog(evt, successDialog);
+      document.removeEventListener('click', onScreenClick);
       document.removeEventListener('keydown', onSuccessDialogEscPress);
     };
     document.addEventListener('keydown', onSuccessDialogEscPress);
@@ -54,6 +59,7 @@
     var onScreenClick = function () {
       window.util.hideDialog(successDialog);
       document.removeEventListener('click', onScreenClick);
+      document.removeEventListener('keydown', onSuccessDialogEscPress);
     };
     document.addEventListener('click', onScreenClick);
   };
@@ -93,33 +99,84 @@
     };
     document.addEventListener('click', onScreenClick);
   };
-  // Позже разберусь, как сделать всё коротко и красиво
+
+  var toggleListenersOn = function () {
+    document.addEventListener('keydown', onUploaderEscPress);
+    imgUploadOverlayCloseBtn.addEventListener('click', onUploadCloseBtnClick);
+    form.addEventListener('submit', onFormSubmit);
+    effectsList.addEventListener('change', window.effects.onEffectItemChecked);
+    effectLevelPin.addEventListener('mousedown', window.effects.onPinMouseDown);
+    submitButton.addEventListener('click', window.validation.validateHashtags);
+  };
+
+  var toggleListenersOff = function () {
+    effectsList.removeEventListener('change', window.effects.onEffectItemChecked);
+    document.removeEventListener('keydown', onUploaderEscPress);
+    imgUploadOverlayCloseBtn.removeEventListener('click', onUploadCloseBtnClick);
+    effectLevelPin.removeEventListener('mousedown', window.effects.onPinMouseDown);
+    submitButton.removeEventListener('click', window.validation.validateHashtags);
+  };
+
+  var uploadFile = function (file) {
+    var fileName = file.name.toLowerCase();
+    var matches = FILE_TYPES.some(function (it) {
+      return fileName.endsWith(it);
+    });
+    if (matches) {
+      var reader = new FileReader();
+
+      reader.addEventListener('load', function () {
+        imgPreview.src = reader.result;
+        imgPreview.style.objectFit = 'cover';
+        imgPreview.width = PreviewSize.WIDTH;
+        imgPreview.height = PreviewSize.HEIGHT;
+        effectsPreviews.forEach(function (element) {
+          element.src = reader.result;
+          element.style.objectFit = 'cover';
+        });
+      });
+      reader.readAsDataURL(file);
+    }
+  };
+
+  var onUploadFieldChange = function () {
+    var uploadedFile = imgUploadField.files[0];
+    uploadFile(uploadedFile);
+    toggleListenersOn();
+    imgUploadField.removeEventListener('change', onUploadFieldChange);
+    effectNone.checked = true;
+    window.effects.effectLevelReset();
+    window.util.hideElement(effectLevelField);
+    window.util.showElement(imgUploadOverlay);
+  };
 
   var onUploaderEscPress = function (evt) {
     if (document.activeElement !== inputHashtags && document.activeElement !== inputDescription) {
-      window.util.onEscPressClose(evt, imgUploadOverlay);
-      if (evt.keyCode === window.util.ESC_KEYCODE) {
+      if (evt.key === window.util.ESC_KEY) {
+        window.util.hideElement(imgUploadOverlay);
         onUploaderHideClean();
+        toggleListenersOff();
+        imgUploadField.addEventListener('change', onUploadFieldChange);
       }
     }
   };
 
-  imgUploadField.addEventListener('change', function () {
-    window.util.showElement(imgUploadOverlay);
-    onUploadOverlaySetEffect();
-    document.addEventListener('keydown', onUploaderEscPress);
-  });
-
-  imgUploadOverlayCloseBtn.addEventListener('click', function () {
+  var onUploadCloseBtnClick = function () {
     window.util.hideElement(imgUploadOverlay);
     onUploaderHideClean();
-    document.removeEventListener('keydown', onUploaderEscPress);
-  });
+    toggleListenersOff();
+    imgUploadField.addEventListener('change', onUploadFieldChange);
+  };
 
-  form.addEventListener('submit', function (evt) {
+  var onFormSubmit = function (evt) {
     window.backend.upload(new FormData(form), onSuccess, onFail);
     evt.preventDefault();
-    document.removeEventListener('keydown', onUploaderEscPress);
-  });
+    toggleListenersOff();
+    imgUploadField.addEventListener('change', onUploadFieldChange);
+  };
+
+  window.upload = {
+    onUploadFieldChange: onUploadFieldChange
+  };
 
 })();
