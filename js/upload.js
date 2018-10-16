@@ -7,6 +7,8 @@
     HEIGHT: '586'
   };
 
+  var body = document.querySelector('body');
+
   var imgPreview = document.querySelector('.img-upload__preview img');
   var imgUploadField = document.querySelector('#upload-file');
   var imgUploadOverlay = document.querySelector('.img-upload__overlay');
@@ -151,6 +153,7 @@
     window.effects.effectLevelReset();
     window.util.hideElement(effectLevelField);
     window.util.showElement(imgUploadOverlay);
+    body.classList.add('modal-open');
   };
 
   var onUploaderEscPress = function (evt) {
@@ -160,6 +163,7 @@
         onUploaderHideClean();
         toggleListenersOff();
         imgUploadField.addEventListener('change', onUploadFieldChange);
+        body.classList.remove('modal-open');
       }
     }
   };
@@ -169,6 +173,7 @@
     onUploaderHideClean();
     toggleListenersOff();
     imgUploadField.addEventListener('change', onUploadFieldChange);
+    body.classList.remove('modal-open');
   };
 
   var onFormSubmit = function (evt) {
@@ -176,6 +181,7 @@
     evt.preventDefault();
     toggleListenersOff();
     imgUploadField.addEventListener('change', onUploadFieldChange);
+    body.classList.remove('modal-open');
   };
 
   window.upload = {
