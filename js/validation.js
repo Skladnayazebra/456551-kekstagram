@@ -66,6 +66,7 @@
   };
 
   window.validation = {
-    validateHashtags: validateHashtags
+    validateHashtags: validateHashtags,
+    onHashtagsFieldInput: onHashtagsFieldInput
   };
 })();

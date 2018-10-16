@@ -39,6 +39,7 @@
     imgPreview.style.transform = 'scale(' + (window.effects.SCALE_DEFAULT) / 100 + ')';
     inputHashtags.value = null;
     inputDescription.value = null;
+    inputHashtags.style.border = '';
   };
 
   var onSuccess = function (message) {
@@ -107,6 +108,7 @@
     effectsList.addEventListener('change', window.effects.onEffectItemChecked);
     effectLevelPin.addEventListener('mousedown', window.effects.onPinMouseDown);
     submitButton.addEventListener('click', window.validation.validateHashtags);
+    inputHashtags.addEventListener('input', window.validation.onHashtagsFieldInput);
   };
 
   var toggleListenersOff = function () {
@@ -115,6 +117,7 @@
     imgUploadOverlayCloseBtn.removeEventListener('click', onUploadCloseBtnClick);
     effectLevelPin.removeEventListener('mousedown', window.effects.onPinMouseDown);
     submitButton.removeEventListener('click', window.validation.validateHashtags);
+    inputHashtags.removeEventListener('input', window.validation.onHashtagsFieldInput);
   };
 
   var uploadFile = function (file) {
