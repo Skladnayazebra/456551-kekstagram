@@ -53,7 +53,7 @@
 
                   <!-- Предварительный просмотр изображения -->
                   <div class="img-upload__preview">
-                    <img src="img/upload-default-image.jpg" alt="Предварительный просмотр фотографии">
+                    <img src="" alt="Предварительный просмотр фотографии">
                   </div>
 
                   <!-- Изменение глубины эффекта, накладываемого на изображение -->
@@ -73,44 +73,44 @@
                 <fieldset class="img-upload__effects  effects">
                   <ul class="effects__list">
                     <li class="effects__item">
-                      <input type="radio" class="effects__radio  visually-hidden" name="effect" id="effect-none" value="none" checked>
+                      <input type="radio" class="effects__radio  visually-hidden" name="effect" id="effect-none" value="none">
                       <label for="effect-none" class="effects__label">
-                        <span class="effects__preview  effects__preview--none">Превью фото без эффекта</span>
+                        <img src="" alt="Превью фото без эффекта" class="effects__preview  effects__preview--none">
                         Оригинал
                       </label>
                     </li>
                     <li class="effects__item">
                       <input type="radio" class="effects__radio  visually-hidden" name="effect" id="effect-chrome" value="chrome">
                       <label for="effect-chrome" class="effects__label">
-                        <span class="effects__preview  effects__preview--chrome">Превью эффекта Хром</span>
+                        <img src="" alt="Превью эффекта Хром" class="effects__preview  effects__preview--chrome">
                         Хром
                       </label>
                     </li>
                     <li class="effects__item">
                       <input type="radio" class="effects__radio  visually-hidden" name="effect" id="effect-sepia" value="sepia">
                       <label for="effect-sepia" class="effects__label">
-                        <span class="effects__preview  effects__preview--sepia">Превью эффекта Сепия</span>
+                        <img src="" alt="Превью эффекта Сепия" class="effects__preview  effects__preview--sepia">
                         Сепия
                       </label>
                     </li>
                     <li class="effects__item">
                       <input type="radio" class="effects__radio  visually-hidden" name="effect" id="effect-marvin" value="marvin">
                       <label for="effect-marvin" class="effects__label">
-                        <span class="effects__preview  effects__preview--marvin">Превью эффекта Марвин</span>
+                        <img src="" alt="Превью эффекта Марвин" class="effects__preview  effects__preview--marvin">
                         Марвин
                       </label>
                     </li>
                     <li class="effects__item">
                       <input type="radio" class="effects__radio  visually-hidden" name="effect" id="effect-phobos" value="phobos">
                       <label for="effect-phobos" class="effects__label">
-                        <span class="effects__preview  effects__preview--phobos">Превью эффекта Фобос</span>
+                        <img src="" alt="Превью эффекта Фобос" class="effects__preview  effects__preview--phobos">
                         Фобос
                       </label>
                     </li>
                     <li class="effects__item">
                       <input type="radio" class="effects__radio  visually-hidden" name="effect" id="effect-heat" value="heat">
                       <label for="effect-heat" class="effects__label">
-                        <span class="effects__preview  effects__preview--heat">Превью эффекта Зной</span>
+                        <img src="" alt="Превью эффекта Зной" class="effects__preview effects__preview--heat">
                         Зной
                       </label>
                     </li>
@@ -145,6 +145,9 @@
           <img src="img/logo-background-3.jpg" alt="Девушка в купальнике" width="600" height="600">
         </div>
 
+        <!-- Кнопка для выхода из полноэкранного просмотра изображения -->
+        <button type="reset" class="big-picture__cancel  cancel" id="picture-cancel">Закрыть</button>
+
         <!-- Информация об изображении. Подпись, комментарии, количество лайков -->
         <div class="big-picture__social  social">
           <div class="social__header">
@@ -170,8 +173,6 @@
           </div>
         </div>
 
-        <!-- Кнопка для выхода из полноэкранного просмотра изображения -->
-        <button type="reset" class="big-picture__cancel  cancel" id="picture-cancel">Закрыть</button>
       </div>
     </section>
   </main>
@@ -242,10 +243,10 @@
 
   <script src="js/util.js"></script>
   <script src="js/backend.js"></script>
+  <script src="js/upload.js"></script>
+  <script src="js/effects.js"></script>
+  <script src="js/validation.js"></script>
   <script src="js/gallery.js"></script>
   <script src="js/preview.js"></script>
-  <script src="js/upload-window.js"></script>
-  <script src="js/effects.js"></script>
-  <script src="js/form.js"></script>
 </body>
 </html>

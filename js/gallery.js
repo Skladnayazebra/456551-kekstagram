@@ -2,12 +2,16 @@
 
 (function () {
   var NEW_PHOTOS_COUNT = 10;
-  var pictures = document.querySelector('.pictures');
+  var picturesContainer = document.querySelector('.pictures');
   var pictureTemplate = document.querySelector('#picture').content.querySelector('.picture');
 
   var errorDialogTemplate = document.querySelector('#error').content.querySelector('.error');
   var main = document.querySelector('main');
   var photosData = [];
+
+  var imgUploadField = document.querySelector('#upload-file');
+
+  imgUploadField.addEventListener('change', window.upload.onUploadFieldChange);
 
   var createPictureElement = function (pictureData) {
     var picture = pictureTemplate.cloneNode(true);
@@ -15,33 +19,35 @@
     picture.querySelector('.picture__likes').textContent = pictureData.likes;
     picture.querySelector('.picture__comments').textContent = String(pictureData.comments.length);
     return picture;
-  };
 
+  };
   var fillPicturesContainer = function (dataArray) {
     var pictureFragment = document.createDocumentFragment();
     dataArray.forEach(function (element) {
       pictureFragment.appendChild(createPictureElement(element));
     });
-    pictures.appendChild(pictureFragment);
-  };
+    picturesContainer.appendChild(pictureFragment);
 
+  };
   var refreshPics = function (dataArray) {
-    while (pictures.lastChild.className === 'picture') {
-      pictures.removeChild(pictures.lastChild);
+    while (picturesContainer.lastChild.className === 'picture') {
+      picturesContainer.removeChild(picturesContainer.lastChild);
     }
     fillPicturesContainer(dataArray);
+
   };
 
   var refreshPicsDebounced = window.util.debounce(refreshPics);
-
   var showDialog = function (dialog) {
     main.appendChild(dialog);
+
   };
 
   var onLoad = function (data) {
     photosData = JSON.parse(data);
     fillPicturesContainer(photosData);
     document.querySelector('.img-filters').classList.remove('img-filters--inactive');
+    picturesContainer.addEventListener('click', window.preview.onPictureClick);
     window.photosData = photosData;
   };
   var onError = function (message) {
@@ -50,6 +56,7 @@
     errorDialog.querySelector('.error__buttons').remove();
     showDialog(errorDialog);
   };
+
   window.backend.download(onLoad, onError);
 
   var filterPopularButton = document.querySelector('#filter-popular');
