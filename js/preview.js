@@ -28,7 +28,7 @@
     var newComment = commentTemplate.cloneNode(true);
     var avatarUrl = 'img/avatar-' + window.util.generateNumber(1, AVATAR_VARIANTS) + '.svg';
     newComment.querySelector('.social__picture').setAttribute('src', avatarUrl);
-    newComment.querySelector('.social__text').textContent = arrayElement;
+    newComment.querySelector('.social__text').textContent = arrayElement.message;
     return newComment;
   };
 
